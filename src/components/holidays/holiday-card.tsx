@@ -220,12 +220,10 @@ export function HolidaysCard() {
           <h2 className="text-base font-semibold">Upcoming Holidays</h2>
 
           <Button
-            variant="ghost"
-            size="sm"
-            className="text-primary"
+            variant={"link"}
             onClick={() => router.push("/timehub/holidays")}
           >
-            View All
+            View All →
           </Button>
         </div>
 

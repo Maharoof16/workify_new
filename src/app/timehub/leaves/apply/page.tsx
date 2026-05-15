@@ -5,7 +5,7 @@ import LeavePolicyCard from "@/components/leaves/leave-policy-card";
 
 const ApplyLeaves = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-10 gap-3 p-2 h-full">
+    <div className="grid grid-cols-1 lg:grid-cols-10 gap-3 h-full">
       
       {/* LEFT */}
       <div className="lg:col-span-7 rounded-2xl border shadow-sm p-3 ">
@@ -14,7 +14,7 @@ const ApplyLeaves = () => {
       </div>
 
       {/* RIGHT */}
-      <div className="lg:col-span-3 flex flex-col gap-3">
+      <div className="lg:col-span-3 flex flex-col gap-4">
         <LeaveBalanceCard variant="stack" />
         <LeavePolicyCard />
       </div>
