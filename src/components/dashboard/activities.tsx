@@ -42,7 +42,7 @@ export default function ActivitiesCard() {
             return (
               <div
                 key={index}
-                className="flex items-center justify-between rounded-md border border-[#E3ECF5] bg-white p-3"
+                className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between rounded-md border border-[#E3ECF5] bg-white p-3"
               >
                 <div className="flex items-start gap-4">
                   <div
@@ -79,25 +79,25 @@ export default function ActivitiesCard() {
                 <div className="flex items-center gap-3 ">
                   {item.type === "leave" && (
                     <>
-                      <button className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF8EF] transition hover:scale-105">
-                        <Check className="h-5 w-5 text-[#17B26A]" />
+                      <button className="cursor-pointer flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-[#EAF8EF] transition hover:scale-105">
+                        <Check className="h-3 w-3 md:h-5 md:w-5 text-[#17B26A]" />
                       </button>
 
-                      <button className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF1F1] transition hover:scale-105">
-                        <X className="h-5 w-5 text-[#F04438]" />
+                      <button className="cursor-pointer flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-[#FFF1F1] transition hover:scale-105">
+                        <X className="h-3 w-3 md:h-5 md:w-5 text-[#F04438]" />
                       </button>
                     </>
                   )}
 
                   {item.type === "payslip" && (
-                    <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-[#D6E4F2] bg-white px-4 py-2 text-sm font-medium text-[#1683E2] transition hover:bg-[#F3F8FF]">
-                      <Download className="h-4 w-4" />
+                    <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-[#D6E4F2] bg-white px-4 py-2 text-xs md:text-sm font-medium text-[#1683E2] transition hover:bg-[#F3F8FF]">
+                      <Download className="h-3 w-3 md:h-4 md:w-4" />
                       Download
                     </button>
                   )}
 
                   {item.type === "timesheet" && (
-                    <button className="cursor-pointer rounded-lg bg-[#1683E2] px-5 py-2 text-sm font-medium text-white transition hover:opacity-90">
+                    <button className="cursor-pointer rounded-lg bg-[#1683E2] px-5 py-2 text-xs md:text-sm font-medium text-white transition hover:opacity-90">
                       Submit
                     </button>
                   )}
