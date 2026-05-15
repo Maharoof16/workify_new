@@ -79,22 +79,11 @@ export default function GreetingBanner() {
     },
   ];
   const actionBtn =
-    "flex items-center gap-2 rounded-full bg-background/40 dark:bg-background/10 hover:bg-background/60 dark:hover:bg-background/20 text-primary border border-border shadow-sm px-3 py-1 text-xs sm:text-sm";
-
+    "flex items-center gap-2 rounded-full bg-[#EAF6FF]/70 backdrop-blur-md hover:bg-[#DCEFFF] text-[#1482DD] border border-[#B9E0FF] shadow-[0_6px_20px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.05)] px-3 py-1 text-xs sm:text-sm transition-all duration-300";
   return (
-    <Card
-      className="w-full rounded-xl 
-bg-linear-to-r from-accent to-secondary
-  px-4 sm:px-6 py-3 relative overflow-hidden"
-    >
-      <div className="hidden md:block absolute inset-0 pointer-events-none z-0">
-        <div className="absolute right-[25vw] top-1/2 -translate-y-1/2 w-80 h-[calc(100%-4rem)] opacity-60">
-          <Image src={HomeArrows} alt="bg" className="object-contain" />
-        </div>
-      </div>
-
-      <div className="relative z-10 flex flex-col lg:flex-row justify-between gap-4">
-        <div className="space-y-3 w-full">
+    <Card className="w-full rounded-xl bg-linear-to-r from-accent to-secondary px-4 md:px-6 relative overflow-hidden">
+      <div className="relative z-10 grid grid-cols-12 gap-4 items-center">
+        <div className="col-span-12 lg:col-span-5 space-y-8">
           <div>
             <p className="text-[18px] font-medium text-foreground">
               {greeting}!
@@ -105,18 +94,14 @@ bg-linear-to-r from-accent to-secondary
             </h1>
           </div>
 
-          <div className="bg-background/30 dark:bg-background/5 border border-border backdrop-blur-lg rounded-lg p-3 w-full lg:max-w-lg shadow-sm">
-            <p className=" mb-3 font-medium text-sm sm:text-base">
+          <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
+            <p className="mb-3 font-medium text-sm sm:text-base">
               Ready to make today impactful?
             </p>
 
-            <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-2 md:gap-3">
               {actions.map(({ label, icon: Icon, route }) => (
-                <Button
-                  key={label}
-                  className={actionBtn}
-                  // onClick={() => router.push(route)}
-                >
+                <Button key={label} className={actionBtn}>
                   <Icon size={14} />
                   {label}
                 </Button>
@@ -125,41 +110,59 @@ bg-linear-to-r from-accent to-secondary
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 text-xs">
+        <div className="hidden lg:flex lg:col-span-3 justify-center items-center">
+          <div className="opacity-90">
+            <Image
+              src={HomeArrows}
+              alt="bg"
+              className="object-contain w-full h-full"
+            />
+          </div>
+        </div>
+        <div className="col-span-1" />
+
+        <div className="col-span-12 lg:col-span-3 flex justify-start lg:justify-end">
+          <div className="flex flex-col gap-4 justify-center items-center">
+            <div className="flex items-center gap-2 text-xs font-semibold">
               <Calendar size={14} />
               {formattedDate}
             </div>
 
             <div className="flex md:flex-col gap-2">
-              <div className="bg-background backdrop-blur-md rounded-xl px-3 py-2 w-40 border border-background shadow-sm">
+              <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
                 <div className="flex items-center gap-4">
                   <Image
                     src={weatherIcon}
                     alt="weather"
                     className="w-7 h-7 object-contain"
                   />
-                  
-                <div>
-                    <span className="text-regular ">
-                    {temp !== null ? `${temp}°C` : "--"}
-                  </span>
-                <p className="text-xs text-muted-foreground">{location}</p>
-                </div>
+
+                  <div>
+                    <span className="text-regular">
+                      {temp !== null ? `${temp}°C` : "--"}
+                    </span>
+
+                    <p className="text-xs text-muted-foreground">{location}</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-secondary backdrop-blur-md rounded-xl px-3 py-2 w-40 border border-background shadow-sm">
-                <div className="flex items-center gap-2">
+              <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
+                <div className="flex items-center gap-4">
                   <Image
                     src={timehubIcon}
                     alt="time"
-                    className="w-7 h-6 object-contain"
+                    className="w-7 h-7 object-contain"
                   />
-                  <span className="text-regular">8h 12m</span>
+
+                  <div>
+                    <span className="text-regular">8h 12m</span>
+
+                    <p className="text-xs text-muted-foreground">
+                      Worked Today
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground">Worked Today</p>
               </div>
             </div>
           </div>

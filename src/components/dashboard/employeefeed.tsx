@@ -24,19 +24,16 @@ const feedData = [
 
 export function EmployeeFeedCard() {
   return (
-    <div className="w-full rounded-2xl border border-border bg-linear-to-b from-[#F6FAFE] to-white p-4">
-      {/* Header */}
+    <div className="w-full rounded-xl border border-border bg-linear-to-b from-[#F6FAFE] to-white p-4">
       <h2 className="text-lg font-semibold text-text mb-4">Employee Feed</h2>
 
-      {/* Feed List */}
       <div className="flex flex-col gap-3">
         {feedData.map((item, i) => (
           <div
             key={i}
-            className="flex flex-col sm:flex-row gap-3 rounded-xl border border-border bg-surface px-2 py-5 hover:shadow-sm transition"
+            className="flex flex-col sm:flex-row gap-3 rounded-md border border-border bg-surface px-2 py-5 hover:shadow-sm transition"
           >
-            {/* Image */}
-            <div className="relative h-20 w-full sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-lg">
+            <div className="relative h-20 w-full sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-md">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -44,7 +41,6 @@ export function EmployeeFeedCard() {
               />
             </div>
 
-            {/* Content */}
             <div className="flex flex-1 flex-col gap-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-sm font-semibold text-text">
@@ -61,7 +57,6 @@ export function EmployeeFeedCard() {
               <p className="text-xs text-textMuted max-w-8/12">
                 {item.description}
               </p>
-
             </div>
 
             <span className="text-xs text-textMuted whitespace-nowrap">

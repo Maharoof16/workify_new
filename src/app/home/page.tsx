@@ -5,6 +5,12 @@ import { HolidaysCard } from "@/components/holidays/holiday-card";
 import { LeaveBalanceCard } from "@/components/leaves/leave-card";
 import Image from "next/image";
 import FooterImg from "@/assets/footer.png";
+import { ActionItemsCard } from "@/components/dashboard/action-items";
+import { EmployeeFeedCard } from "@/components/dashboard/employeefeed";
+import { SuggestionsCard } from "@/components/dashboard/suggestions";
+import PerformanceDevelopment from "@/components/dashboard/performance-development";
+import ActivitiesCard from "@/components/dashboard/activities";
+import FocusOfTheDay from "@/components/dashboard/focusoftheday";
 
 export const dummyProjects: Project[] = [
   {
@@ -87,43 +93,71 @@ export const dummyProjects: Project[] = [
       },
     ],
   },
+  {
+    id: "5",
+    title: "Timesheet Management",
+    status: "On Hold",
+    priority: "Low",
+    createdAt: "2026-04-28T11:45:00Z",
+    assignees: [
+      {
+        id: "u10",
+        name: "Faris A",
+      },
+      {
+        id: "u11",
+        name: "Diya S",
+      },
+    ],
+  },
 ];
 
 export default function Page() {
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 w-full">
       <div className="xl:col-span-12">
         <GreetingBanner />
       </div>
-      
+
       <div className="xl:col-span-4">
         <TimeHub />
       </div>
 
-      <div className="xl:col-span-8">
+      <div className="xl:col-span-8 flex flex-col gap-5">
+        <FocusOfTheDay/>
+        <ActionItemsCard />
       </div>
-
 
       <div className="xl:col-span-4">
         <ProjectCards projects={dummyProjects} />
       </div>
 
-       <div className="xl:col-span-8">
+      <div className="xl:col-span-8 flex flex-col gap-5">
+        <PerformanceDevelopment />
+        <ActivitiesCard/>
       </div>
 
+      <div className="xl:col-span-12 grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <div className="xl:col-span-8 flex flex-col gap-6">
+          <EmployeeFeedCard />
 
-      <div className="xl:col-span-4">
-        <HolidaysCard />
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <HolidaysCard />
+            <LeaveBalanceCard />
+          </div>
+        </div>
 
-      <div className="xl:col-span-4">
-        <LeaveBalanceCard />
-      </div>
-      <div className="xl:col-span-4">
+        <div className="xl:col-span-4">
+          <SuggestionsCard />
+        </div>
       </div>
 
       <div className="xl:col-span-12">
-        <Image src={FooterImg} alt="Leave Policy" />
+        <Image
+          src={FooterImg}
+          alt="Leave Policy"
+          className="w-full object-cover"
+        />
       </div>
     </div>
   );
