@@ -110,7 +110,7 @@ export const dummyProjects: Project[] = [
       },
     ],
   },
-   {
+  {
     id: "6",
     title: "Timesheet Management",
     status: "On Hold",
@@ -127,7 +127,7 @@ export const dummyProjects: Project[] = [
       },
     ],
   },
-   {
+  {
     id: "7",
     title: "Timesheet Management",
     status: "On Hold",
@@ -144,7 +144,7 @@ export const dummyProjects: Project[] = [
       },
     ],
   },
-   {
+  {
     id: "8",
     title: "Timesheet Management",
     status: "On Hold",
@@ -175,7 +175,7 @@ export default function Page() {
       </div>
 
       <div className="xl:col-span-8 flex flex-col gap-5">
-        <FocusOfTheDay/>
+        <FocusOfTheDay />
         <ActionItemsCard />
       </div>
 
@@ -185,7 +185,7 @@ export default function Page() {
 
       <div className="xl:col-span-8 flex flex-col gap-5">
         <PerformanceDevelopment />
-        <ActivitiesCard/>
+        <ActivitiesCard />
       </div>
 
       <div className="xl:col-span-12 grid grid-cols-1 xl:grid-cols-12 gap-6">
@@ -194,7 +194,7 @@ export default function Page() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <HolidaysCard />
-            <LeaveBalanceCard />
+            <LeaveBalanceCard variant="dashboard" />
           </div>
         </div>
 
