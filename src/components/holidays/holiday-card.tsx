@@ -1,210 +1,360 @@
 "use client";
 
-import {
-  addDays,
-  format,
-  isSameDay,
-  isSameMonth,
-  parseISO,
-  startOfWeek,
-} from "date-fns";
+import { addDays, format, isSameDay, parseISO, startOfWeek } from "date-fns";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const currentYear = new Date().getFullYear();
 
 export const holidayData = {
   year: currentYear,
   holidays: [
+    // NATIONAL
     {
       id: "new-year",
       date: `${currentYear}-01-01`,
       title: "New Year",
-      category: "NATIONAL",
+      category: "National",
     },
     {
       id: "republic-day",
       date: `${currentYear}-01-26`,
       title: "Republic Day",
-      category: "NATIONAL",
-    },
-    {
-      id: "holi",
-      date: `${currentYear}-03-03`,
-      title: "Holi",
-      category: "OCCASIONAL",
-    },
-    {
-      id: "ugadi",
-      date: `${currentYear}-03-19`,
-      title: "Ugadi",
-      category: "OCCASIONAL",
+      category: "National",
     },
     {
       id: "independence-day",
       date: `${currentYear}-08-15`,
       title: "Independence Day",
-      category: "NATIONAL",
+      category: "National",
     },
     {
       id: "gandhi-jayanti",
       date: `${currentYear}-10-02`,
       title: "Gandhi Jayanti",
-      category: "NATIONAL",
+      category: "National",
     },
     {
       id: "christmas",
       date: `${currentYear}-12-25`,
       title: "Christmas",
-      category: "NATIONAL",
+      category: "National",
+    },
+
+    // OPTIONAL
+    {
+      id: "makar-sankranti",
+      date: `${currentYear}-01-14`,
+      title: "Makar Sankranti",
+      category: "Optional",
+    },
+    {
+      id: "maha-shivaratri",
+      date: `${currentYear}-02-26`,
+      title: "Maha Shivaratri",
+      category: "Optional",
+    },
+    {
+      id: "raksha-bandhan",
+      date: `${currentYear}-08-09`,
+      title: "Raksha Bandhan",
+      category: "Optional",
+    },
+    {
+      id: "janmashtami",
+      date: `${currentYear}-08-16`,
+      title: "Janmashtami",
+      category: "Optional",
+    },
+    {
+      id: "karwa-chauth",
+      date: `${currentYear}-10-10`,
+      title: "Karwa Chauth",
+      category: "Optional",
+    },
+
+    // OCCASIONAL
+    {
+      id: "holi",
+      date: `${currentYear}-03-14`,
+      title: "Holi",
+      category: "Occasional",
+    },
+    {
+      id: "ugadi",
+      date: `${currentYear}-03-30`,
+      title: "Ugadi",
+      category: "Occasional",
+    },
+    {
+      id: "ram-navami",
+      date: `${currentYear}-04-06`,
+      title: "Ram Navami",
+      category: "Occasional",
+    },
+    {
+      id: "eid",
+      date: `${currentYear}-03-31`,
+      title: "Eid-ul-Fitr",
+      category: "Occasional",
+    },
+    {
+      id: "ganesh-chaturthi",
+      date: `${currentYear}-08-27`,
+      title: "Ganesh Chaturthi",
+      category: "Occasional",
+    },
+    {
+      id: "dussehra",
+      date: `${currentYear}-10-01`,
+      title: "Dussehra",
+      category: "Occasional",
+    },
+    {
+      id: "diwali",
+      date: `${currentYear}-10-20`,
+      title: "Diwali",
+      category: "Occasional",
     },
   ],
 };
 
 const holidayPalette = [
-  "bg-pink-500 text-white",
-  "bg-blue-500 text-white",
-  "bg-green-500 text-white",
-  "bg-purple-500 text-white",
-  "bg-orange-500 text-white",
+  "status-info",
+  "status-success",
+  "status-warning",
+  "status-danger",
+  "status-neutral",
 ];
 
-const getHolidayColor = (id: string) => {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return holidayPalette[Math.abs(hash) % holidayPalette.length];
+const getHolidayColors = (
+  holidays: Array<
+    (typeof holidayData.holidays)[number] & {
+      dateObj: Date;
+    }
+  >,
+) => {
+  return holidays.map((holiday, index) => ({
+    ...holiday,
+    color: holidayPalette[index % holidayPalette.length],
+  }));
 };
 
 export function HolidaysCard() {
   const today = new Date();
-  const router=useRouter();
 
-  const [currentMonth, setCurrentMonth] = useState(
-    new Date(today.getFullYear(), today.getMonth()),
-  );
+  const router = useRouter();
+
   const [selectedDate, setSelectedDate] = useState(today);
 
   const holidays = useMemo(
     () =>
-      holidayData.holidays.map((h) => ({
-        ...h,
-        dateObj: parseISO(h.date),
-      })),
+      holidayData.holidays
+        .map((h) => ({
+          ...h,
+          dateObj: parseISO(h.date),
+        }))
+        .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()),
     [],
   );
 
-  const holidaysThisMonth = holidays.filter((h) =>
-    isSameMonth(h.dateObj, currentMonth),
-  );
+  const holidaysWithColors = getHolidayColors(holidays);
 
   const getHolidayForDate = (date: Date) =>
     holidays.find((h) => isSameDay(h.dateObj, date));
 
-  const weekStart = startOfWeek(selectedDate, { weekStartsOn: 0 });
-  const weekDays = Array.from({ length: 7 }).map((_, i) =>
-    addDays(weekStart, i),
-  );
+  const weekStart = startOfWeek(selectedDate, {
+    weekStartsOn: 0,
+  });
+
+  const weekDays = Array.from({
+    length: 7,
+  }).map((_, i) => addDays(weekStart, i));
+
+  // Always show max 2 holidays
+  const visibleHolidays = useMemo(() => {
+    const weekEnd = addDays(weekStart, 6);
+
+    // Holidays in current week
+    const weekHolidays = holidaysWithColors.filter(
+      (h) => h.dateObj >= weekStart && h.dateObj <= weekEnd,
+    );
+
+    // If 2 holidays exist in week
+    if (weekHolidays.length >= 2) {
+      return weekHolidays.slice(0, 2);
+    }
+
+    // Upcoming holidays after current week
+    const futureHolidays = holidaysWithColors.filter(
+      (h) => h.dateObj > weekEnd,
+    );
+
+    // Merge current week + future
+    const merged = [...weekHolidays, ...futureHolidays];
+
+    // Keep consistent layout
+    return merged.slice(0, 2);
+  }, [holidaysWithColors, weekStart]);
 
   return (
-    <div className="w-full h-full rounded-2xl border bg-linear-to-b from-[#F6FAFE] to-white p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-[16px] font-semibold text-gray-800">
-          Upcoming Holidays
-        </h2>
+    <Card
+      className="
+        h-full rounded-xl
+        border-dashboard-border
+        bg-linear-to-b
+        from-dashboard-card-from
+        to-dashboard-card-to
+        shadow-none
+      "
+    >
+      <CardContent className="flex h-full flex-col">
+        {/* Header */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-base font-semibold">Upcoming Holidays</h2>
 
-        <button className="text-sm text-blue-500 hover:underline cursor-pointer " onClick={()=> router.push("/timehub/holidays")}>
-          View All →
-        </button>
-      </div>
-
-      <div className="mb-4 rounded-xl border bg-white p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <div
-            onClick={() => {
-              const newDate = addDays(selectedDate, -7);
-              setSelectedDate(newDate);
-              setCurrentMonth(newDate);
-            }}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100"
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-primary"
+            onClick={() => router.push("/timehub/holidays")}
           >
-            <ChevronLeft className="h-4 w-4 text-gray-600" />
+            View All
+          </Button>
+        </div>
+
+        {/* Calendar */}
+        <div
+          className="
+            mb-4 rounded-xl
+            border border-dashboard-border
+            bg-card p-4
+          "
+        >
+          {/* Month Nav */}
+          <div className="mb-3 flex items-center justify-between">
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-8 w-8 rounded-full"
+              onClick={() => {
+                const newDate = addDays(selectedDate, -7);
+
+                setSelectedDate(newDate);
+              }}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            <span className="text-sm font-semibold">
+              {format(selectedDate, "MMMM yyyy")}
+            </span>
+
+            <Button
+              size="icon"
+              variant="outline"
+              className="h-8 w-8 rounded-full"
+              onClick={() => {
+                const newDate = addDays(selectedDate, 7);
+
+                setSelectedDate(newDate);
+              }}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
 
-          <span className="text-sm font-semibold text-gray-800">
-            {format(selectedDate, "MMMM yyyy")}
-          </span>
+          {/* Weekdays */}
+          <div className="grid grid-cols-7 text-center text-[11px] text-muted-foreground">
+            {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+              <div key={`${d}-${i}`}>{d}</div>
+            ))}
+          </div>
 
-          <div
-            onClick={() => {
-              const newDate = addDays(selectedDate, 7);
-              setSelectedDate(newDate);
-              setCurrentMonth(newDate);
-            }}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border bg-gray-50 hover:bg-gray-100"
-          >
-            <ChevronRight className="h-4 w-4 text-gray-600" />
+          {/* Dates */}
+          <div className="mt-2 grid grid-cols-7 text-center text-sm">
+            {weekDays.map((date) => {
+              const isToday = isSameDay(date, today);
+
+              const holiday = getHolidayForDate(date);
+
+              return (
+                <button
+                  key={date.toISOString()}
+                  onClick={() => setSelectedDate(date)}
+                  className={`
+                    mx-auto flex h-9 w-9
+                    items-center justify-center
+                    rounded-full text-sm
+                    transition-colors
+
+                    ${
+                      isToday
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground"
+                    }
+
+                    ${holiday && !isToday ? "font-semibold text-primary" : ""}
+                  `}
+                >
+                  {format(date, "d")}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="grid grid-cols-7 text-center text-[11px] text-gray-400">
-          {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-            <div key={`${d}-${i}`}>{d}</div>
-          ))}
-        </div>
-        <div className="mt-2 grid grid-cols-7 text-center text-sm">
-          {weekDays.map((date) => {
-            const isToday = isSameDay(date, today);
-            const holiday = getHolidayForDate(date);
+        {/* Holiday List */}
+        <div className="flex-1 space-y-3 overflow-auto pr-1">
+          {visibleHolidays.map((h) => {
+            const badgeColor = h.color;
 
             return (
               <div
-                key={date.toISOString()}
-                onClick={() => setSelectedDate(date)}
-                className={`mx-auto flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-sm
-                  ${isToday ? "bg-blue-600 text-white" : "text-gray-700"}
-                  ${holiday && !isToday ? "font-semibold text-blue-600" : ""}
-                  `}
+                key={h.id}
+                className="
+                  flex items-center justify-between
+                  rounded-md border
+                  border-dashboard-border
+                  bg-card px-3 py-2
+                "
               >
-                {format(date, "d")}
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`
+                      flex h-7 w-7 items-center
+                      justify-center rounded-md
+                      text-xs font-semibold
+                      ${badgeColor}
+                    `}
+                  >
+                    {format(h.dateObj, "dd")}
+                  </div>
+
+                  <span className="text-sm font-medium">
+                    {format(h.dateObj, "MMM dd")} {h.title}
+                  </span>
+                </div>
+
+                <span
+                  className="
+                    text-xs font-medium
+                    text-primary
+                  "
+                >
+                  {h.category} Holiday
+                </span>
               </div>
             );
           })}
         </div>
-      </div>
-
-      <div className="space-y-3">
-        {holidaysThisMonth.map((h) => {
-          const badgeColor = getHolidayColor(h.id);
-
-          return (
-            <div
-              key={h.id}
-              className="flex items-center justify-between rounded-xl border bg-white px-4 py-3"
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-xs font-semibold ${badgeColor}`}
-                >
-                  {format(h.dateObj, "dd")}
-                </div>
-
-                <span className="text-sm font-medium text-gray-800">
-                  {format(h.dateObj, "MMM dd")} {h.title}
-                </span>
-              </div>
-
-              <span className="text-xs text-blue-500 font-medium">
-                {h.category === "NATIONAL"
-                  ? "National Holiday"
-                  : "Occasional Holiday"}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
