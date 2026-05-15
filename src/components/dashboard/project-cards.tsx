@@ -5,8 +5,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-import { Badge } from "@/components/ui/badge";
 import GenericBadge from "../common/generic-badge";
 import { cn } from "@/lib/utils";
 
@@ -90,8 +88,8 @@ export default function ProjectCards({ projects, loading }: Props) {
       to-dashboard-card-to
       p-3
       flex flex-col
-      max-h-80
-      lg:max-h-[calc(100dvh-8rem)]
+      h-full
+    max-h-[calc(5*135px)]
     "
     >
       {/* Header */}
@@ -100,7 +98,7 @@ export default function ProjectCards({ projects, loading }: Props) {
       {/* Content */}
       <div
         className={`flex-1 min-h-0 pr-1 space-y-2 ${
-          loading ? "overflow-hidden" : "overflow-auto"
+          loading ? "overflow-hidden" : "overflow-auto custom-scrollbar"
         }`}
       >
         {loading ? (

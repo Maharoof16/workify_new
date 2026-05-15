@@ -110,6 +110,57 @@ export const dummyProjects: Project[] = [
       },
     ],
   },
+   {
+    id: "6",
+    title: "Timesheet Management",
+    status: "On Hold",
+    priority: "Low",
+    createdAt: "2026-04-28T11:45:00Z",
+    assignees: [
+      {
+        id: "u10",
+        name: "Faris A",
+      },
+      {
+        id: "u11",
+        name: "Diya S",
+      },
+    ],
+  },
+   {
+    id: "7",
+    title: "Timesheet Management",
+    status: "On Hold",
+    priority: "Low",
+    createdAt: "2026-04-28T11:45:00Z",
+    assignees: [
+      {
+        id: "u10",
+        name: "Faris A",
+      },
+      {
+        id: "u11",
+        name: "Diya S",
+      },
+    ],
+  },
+   {
+    id: "8",
+    title: "Timesheet Management",
+    status: "On Hold",
+    priority: "Low",
+    createdAt: "2026-04-28T11:45:00Z",
+    assignees: [
+      {
+        id: "u10",
+        name: "Faris A",
+      },
+      {
+        id: "u11",
+        name: "Diya S",
+      },
+    ],
+  },
 ];
 
 export default function Page() {
