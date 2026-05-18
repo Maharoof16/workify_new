@@ -4,100 +4,15 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/common/data-table";
 import { buildColumns } from "@/lib/table-utils";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import leaveImg from "@/assets/Leave-Banner.png"; // replace later
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { MoveRight, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LeaveBalanceCard } from "@/modules/timehub/leaves/components/leave-card";
-
-type LeaveStatus = "PENDING" | "APPROVED" | "REJECTED";
-
-type Leave = {
-  id: string;
-  type: string;
-  startDate: string;
-  endDate: string;
-  reason: string;
-  duration: string;
-  status: LeaveStatus;
-};
-
-const leaveData: Leave[] = [
-  {
-    id: "1",
-    type: "Sick",
-    startDate: "2026-04-12",
-    endDate: "2026-04-15",
-    reason: "Viral Fever",
-    duration: "4 Days",
-    status: "PENDING",
-  },
-  {
-    id: "2",
-    type: "Paid",
-    startDate: "2026-04-22",
-    endDate: "2026-04-22",
-    reason: "Family Function",
-    duration: "1 Day",
-    status: "APPROVED",
-  },
-  {
-    id: "1",
-    type: "Sick",
-    startDate: "2026-04-12",
-    endDate: "2026-04-15",
-    reason: "Viral Fever",
-    duration: "4 Days",
-    status: "PENDING",
-  },
-  {
-    id: "2",
-    type: "Paid",
-    startDate: "2026-04-22",
-    endDate: "2026-04-22",
-    reason: "Family Function",
-    duration: "1 Day",
-    status: "APPROVED",
-  },
-  {
-    id: "1",
-    type: "Sick",
-    startDate: "2026-04-12",
-    endDate: "2026-04-15",
-    reason: "Viral Fever",
-    duration: "4 Days",
-    status: "PENDING",
-  },
-  {
-    id: "2",
-    type: "Paid",
-    startDate: "2026-04-22",
-    endDate: "2026-04-22",
-    reason: "Family Function",
-    duration: "1 Day",
-    status: "APPROVED",
-  },
-  {
-    id: "1",
-    type: "Sick",
-    startDate: "2026-04-12",
-    endDate: "2026-04-15",
-    reason: "Viral Fever",
-    duration: "4 Days",
-    status: "PENDING",
-  },
-  {
-    id: "2",
-    type: "Paid",
-    startDate: "2026-04-22",
-    endDate: "2026-04-22",
-    reason: "Family Function",
-    duration: "1 Day",
-    status: "APPROVED",
-  },
-];
+import { LeaveService } from "@/modules/timehub/leaves/leave.service";
+import { Leave, LeaveStatus } from "@/modules/timehub/leaves/leave";
 
 const StatusBadge = ({ status }: { status: LeaveStatus }) => {
   const map = {
@@ -116,21 +31,49 @@ const StatusBadge = ({ status }: { status: LeaveStatus }) => {
 };
 
 export default function LeavesPage() {
+  const router = useRouter();
+  const [leaves, setLeaves] = useState<Leave[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchLeaves();
+  }, []);
+
+  const fetchLeaves = async () => {
+    setLoading(true);
+
+    try {
+      const res = await LeaveService.getAll();
+
+      setLeaves(res.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const headers = [
+    "Leave Type",
+    "Start Date",
+    "End Date",
+    "Reason",
+    "Duration",
+    "Leave Status",
+    "Actions",
+  ];
   const columns = useMemo(() => {
     return buildColumns<Leave>({
-      headers: [
-        "Leave Type",
-        "Start Date",
-        "End Date",
-        "Reason",
-        "Duration",
-        "Leave Status",
-        "Actions",
-      ],
+      headers: headers,
       customRenderers: {
         "Leave Type": {
+          cell: (item) => <span>{item.type}</span>,
+        },
+        Duration: {
           cell: (item) => (
-            <span className="text-sm font-medium">{item.type}</span>
+            <span>
+              {item.duration} {item.duration > 1 ? "Days" : "Day"}
+            </span>
           ),
         },
 
@@ -155,7 +98,6 @@ export default function LeavesPage() {
       },
     });
   }, []);
-  const router = useRouter();
 
   return (
     <div className="flex flex-col gap-3 p-2 ">
@@ -230,9 +172,9 @@ export default function LeavesPage() {
 
         <DataTable
           name="leaveTable"
-          data={leaveData}
+          data={leaves}
           columns={columns}
-          loading={false}
+          loading={loading}
           visibilityToggle={false}
         />
       </div>

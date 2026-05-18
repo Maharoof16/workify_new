@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Status = "success" | "warning" | "info" | "danger" | "neutral";
+type Status = "success" | "warning" | "info" | "danger" ;
 
 type Props = {
   title: string;
@@ -43,11 +43,7 @@ const statusStyles = {
     bg: "bg-danger",
     value: "text-danger",
   },
-  neutral: {
-    icon: "text-muted-foreground",
-    bg: "bg-muted",
-    value: "",
-  },
+
 };
 
 export function AttendanceCard({
@@ -60,7 +56,7 @@ export function AttendanceCard({
   className,
   valueIcon,
   variant = "default",
-  status = "neutral",
+  status = "info",
 }: Props) {
   const styles = statusStyles[status];
 

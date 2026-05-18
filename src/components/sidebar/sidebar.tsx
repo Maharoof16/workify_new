@@ -149,7 +149,60 @@ export default function WorkifySidebar() {
             "
           />
 
-          <SidebarTrigger className="h-8 w-8 shrink-0" />
+          {/* NORMAL TRIGGER */}
+          <SidebarTrigger
+            className="
+              h-8 w-8 shrink-0
+              group-data-[collapsible=icon]:hidden
+               bg-transparent hover:bg-transparent
+                 shadow-none
+            "
+          />
+
+          {/* COLLAPSED MINI LOGO */}
+          <div
+            className="
+    relative hidden
+    h-10 w-10
+    group-data-[collapsible=icon]:flex
+    items-center justify-center
+    overflow-hidden
+    group
+  "
+          >
+            {/* MINI LOGO */}
+            <Image
+              src="/icon-mini.png"
+              alt="Mini Logo"
+              width={28}
+              height={28}
+              className="
+      absolute
+      transition-all duration-200
+
+      group-hover:opacity-0
+      group-hover:scale-75
+    "
+            />
+
+            {/* SIDEBAR TRIGGER */}
+            <SidebarTrigger
+              className="
+      absolute inset-0
+
+      opacity-0 scale-75
+      transition-all duration-200
+
+      group-hover:opacity-100
+      group-hover:scale-100
+
+      bg-transparent!
+      hover:bg-transparent!
+      shadow-none
+
+    "
+            />
+          </div>
         </div>
       </SidebarHeader>
 
@@ -159,9 +212,12 @@ export default function WorkifySidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
               {sidebarItems.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                const isActive = item.children
+                  ? item.children.some((child) =>
+                      pathname.startsWith(child.href),
+                    )
+                  : pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`);
 
                 const hasChildren = !!item.children;
 
@@ -288,7 +344,7 @@ export default function WorkifySidebar() {
                             mt-2 flex-col items-center gap-2
 
                             ${
-                              isActive && isOpen
+                              isOpen
                                 ? "group-data-[collapsible=icon]:flex"
                                 : "group-data-[collapsible=icon]:hidden"
                             }

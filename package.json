@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "^1.4.1",
     "@fontsource/manrope": "^5.2.8",
+    "@svgr/webpack": "^8.1.0",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.16.1",
     "class-variance-authority": "^0.7.1",
