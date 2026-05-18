@@ -95,7 +95,7 @@ export default function LeaveForm() {
                     variant="outline"
                     className={`
                     min-h-10 w-full justify-between
-                    rounded-sm bg-white text-sm font-normal shadow-none
+                    rounded-sm  text-sm font-normal shadow-none
 
                     ${
                       errors[name]
@@ -225,7 +225,7 @@ export default function LeaveForm() {
             placeholder="Enter Notes"
             className="
       min-h-10 w-full rounded-sm
-      border border-input bg-white
+      border border-input 
       px-3 text-sm shadow-none
       focus:outline-none focus:ring-0
     "
@@ -237,31 +237,29 @@ export default function LeaveForm() {
         </div>
 
         <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
-  <div className="flex items-center gap-4 flex-wrap">
-    {sessionOptions.map((opt) => (
-      <div key={opt.value} className="flex items-center gap-2">
-        <Checkbox
-          checked={fromSession === opt.value}
-          onCheckedChange={() => setValue("fromSession", opt.value)}
-          className="cursor-pointer"
-        />
+          <div className="flex items-center gap-4 flex-wrap">
+            {sessionOptions.map((opt) => (
+              <div key={opt.value} className="flex items-center gap-2">
+                <Checkbox
+                  checked={fromSession === opt.value}
+                  onCheckedChange={() => setValue("fromSession", opt.value)}
+                  className="cursor-pointer"
+                />
 
-        <label className="text-sm cursor-pointer whitespace-nowrap">
-          {opt.label}
-        </label>
-      </div>
-    ))}
-  </div>
-</div>
+                <label className="text-sm cursor-pointer whitespace-nowrap">
+                  {opt.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
 
         <div className="col-span-6 md:col-span-3">
           {renderDateField("toDate", "To Date")}
         </div>
 
-           <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
-  <div className="flex items-center gap-4 flex-wrap">
-
-        
+        <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
+          <div className="flex items-center gap-4 flex-wrap">
             {sessionOptions.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
                 <Checkbox
@@ -285,7 +283,7 @@ export default function LeaveForm() {
             placeholder="Enter reason"
             className="
       min-h-28 w-full rounded-md
-      border border-input bg-white
+      border border-input
       px-3 py-3 text-sm shadow-none
       focus:outline-none focus:ring-0
       resize-none
@@ -324,24 +322,24 @@ export default function LeaveForm() {
           <span className="label-error">{errors.files?.message}</span>
         </div>
 
-       <div className="col-span-6 flex items-center gap-3 my-1">
-  <Button
-    type="submit"
-    className="min-h-10 rounded-sm px-5 flex items-center gap-2"
-  >
-    Apply Leave
-    <MoveRight className="h-4 w-4" />
-  </Button>
+        <div className="col-span-6 flex items-center gap-3 my-1">
+          <Button
+            type="submit"
+            className="min-h-10 rounded-sm px-5 flex items-center gap-2"
+          >
+            Apply Leave
+            <MoveRight className="h-4 w-4" />
+          </Button>
 
-  <Button
-    type="button"
-    variant="secondary"
-    onClick={() => router.back()}
-    className="min-h-10 rounded-sm px-5"
-  >
-    Cancel
-  </Button>
-</div>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.back()}
+            className="min-h-10 rounded-sm px-5"
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
     </div>
   );

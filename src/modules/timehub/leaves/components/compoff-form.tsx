@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { ChevronDown, CloudUpload, File } from "lucide-react";
+import { ChevronDown, CloudUpload, File, MoveRight } from "lucide-react";
 import { Timer } from "@/components/ui/timer";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function CompOffForm() {
       <Controller
         name="desiredDate"
         control={control}
-        rules={{ required: "Required" }}
+        rules={{ required: "Desired Date Required" }}
         render={({ field }) => {
           const selectedDate = field.value ? new Date(field.value) : undefined;
 
@@ -70,22 +70,34 @@ export default function CompOffForm() {
                   <Button
                     type="button"
                     variant="outline"
-                    className={`w-full justify-between font-normal ${
-                      errors.desiredDate ? "border-red-500" : ""
-                    }`}
+                    className={`
+                    min-h-10 w-full justify-between
+                    rounded-sm text-sm font-normal
+                    shadow-none
+
+                    ${
+                      errors.desiredDate
+                        ? "border border-red-500"
+                        : "border border-input"
+                    }
+                  `}
                   >
                     {field.value || "Select Desired Date"}
-                    <ChevronDown className="w-4 h-4" />
+
+                    <ChevronDown className="h-4 w-4 shrink-0" />
                   </Button>
                 </PopoverTrigger>
 
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto rounded-sm border p-0">
                   <Calendar
                     mode="single"
                     selected={selectedDate}
                     onSelect={(date) => {
                       field.onChange(formatDate(date));
-                      setPopoverOpen({ desiredDate: false });
+
+                      setPopoverOpen({
+                        desiredDate: false,
+                      });
                     }}
                   />
                 </PopoverContent>
@@ -135,21 +147,20 @@ export default function CompOffForm() {
   };
 
   return (
-    <div className="w-full mx-auto h-full rounded-2xl border p-3 shadow-sm flex flex-col gap-2">
+    <div className="w-full mx-auto h-full rounded-xl p-3 xl:p-6 border flex flex-col gap-2 border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to">
       <h2 className="text-lg font-semibold">Comp Off Request</h2>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-6 gap-2"
+        className="grid grid-cols-6 gap-4"
       >
-        {/* Comp Off Type */}
         <div className="col-span-6 md:col-span-3">
-          <label className="label-primary">Comp Off Type</label>
+          <label className="label-primary label-required">Comp Off Type</label>
 
           <Controller
             name="compOffType"
             control={control}
-            rules={{ required: "Required" }}
+            rules={{ required: "Comp Off Type Required" }}
             render={({ field }) => (
               <SearchableSelect
                 value={field.value || ""}
@@ -163,11 +174,15 @@ export default function CompOffForm() {
                   field.onChange(val)
                 }
                 trim={false}
-                className={
-                  errors.compOffType
-                    ? "border border-red-500 rounded-md"
-                    : "border rounded-md"
-                }
+                className={`
+                    h-10
+
+                  ${
+                    errors.compOffType
+                      ? "border border-red-500 rounded-sm"
+                      : "border rounded-sm"
+                  }
+                `}
               />
             )}
           />
@@ -175,30 +190,41 @@ export default function CompOffForm() {
           <span className="label-error">{errors.compOffType?.message}</span>
         </div>
 
-        {/* Desired Date */}
         {renderDateField()}
 
-        {/* Time Range */}
-        <div className="col-span-6 grid grid-cols-2 gap-3">
-          {/* FROM TIME */}
+        <div className="col-span-6 grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label className="label-primary">From Time</label>
+            <label className="label-primary label-required">From Time</label>
 
             <Controller
               name="fromTime"
               control={control}
               rules={{ required: "Start time is required" }}
               render={({ field }) => (
-                <Timer value={field.value} onChange={field.onChange} />
+               <div
+  className={`
+    min-h-10 rounded-sm
+
+    ${
+      errors.fromTime
+        ? "border border-red-500"
+        : "border border-input"
+    }
+  `}
+>
+  <Timer
+    value={field.value}
+    onChange={field.onChange}
+  />
+</div>
               )}
             />
 
             <span className="label-error">{errors.fromTime?.message}</span>
           </div>
 
-          {/* TO TIME */}
           <div>
-            <label className="label-primary">To Time</label>
+            <label className="label-primary label-required">To Time</label>
 
             <Controller
               name="toTime"
@@ -214,31 +240,43 @@ export default function CompOffForm() {
                 },
               }}
               render={({ field }) => (
-                <Timer value={field.value} onChange={field.onChange} />
+                <div
+                  className={`
+            min-h-10 rounded-sm
+
+            ${errors.toTime ? "border border-red-500" : "border border-input"}
+          `}
+                >
+                  <Timer value={field.value} onChange={field.onChange} />
+                </div>
               )}
             />
 
             <span className="label-error">{errors.toTime?.message}</span>
           </div>
         </div>
-        {/* Reason */}
         <div className="col-span-6">
           <label className="label-primary">Reason For Absence</label>
 
           <textarea
             {...register("reason")}
-            className={`w-full rounded-md border px-3 py-2 text-sm h-44 ${
-              errors.reason ? "border-red-500" : ""
-            }`}
+            placeholder="Enter reason for absence"
+            className={`
+      min-h-44 w-full resize-none
+      rounded-md 
+      px-3 py-3 text-sm
+      shadow-none focus:outline-none focus:ring-0
+
+      ${errors.reason ? "border border-red-500" : "border border-input"}
+    `}
           />
 
           <span className="label-error">{errors.reason?.message}</span>
         </div>
 
-        {/* Upload */}
         <div className="col-span-6">
           <div
-            className="bg-muted border border-dashed rounded-xl py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
+            className="bg-muted border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
             onClick={() => fileInputRef.current?.click()}
           >
             <CloudUpload className="text-primary" size={30} />
@@ -266,13 +304,21 @@ export default function CompOffForm() {
           <span className="label-error">{errors.files?.message}</span>
         </div>
 
-        {/* Actions */}
-        <div className="col-span-6 flex gap-3">
-          <Button type="submit" className="px-6">
-            Submit Request →
+        <div className="col-span-6 flex items-center gap-3">
+          <Button
+            type="submit"
+            className="min-h-10 rounded-sm px-6 flex items-center gap-2"
+          >
+            Submit Request
+            <MoveRight className="h-4 w-4" />
           </Button>
 
-          <Button type="button" variant="secondary" onClick={()=> router.back()}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => router.back()}
+            className="min-h-10 rounded-sm px-5"
+          >
             Cancel
           </Button>
         </div>
