@@ -1,6 +1,5 @@
 "use client";
 
-import { Activity, Briefcase, CalendarCheck, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import casualLeaveIcon from "@/assets/casual-leave.png";
 import sickLeaveIcon from "@/assets/sick-leave.png";
@@ -8,6 +7,7 @@ import earnedLeaveIcon from "@/assets/earned-leave.png";
 import compOffIcon from "@/assets/comp-off.png";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { MoveRight } from "lucide-react";
 
 function getProgress(used: number, total: number) {
   if (!total) return 0;
@@ -57,18 +57,20 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
   return (
     <div
       className={`
-        w-full border border-[#D9E2F2] bg-[#F8FBFF]
-
+          w-full h-full bg-[#F8FBFF]
+          border border-dashboard-border
+          bg-linear-to-b
+          from-dashboard-card-from
+          to-dashboard-card-to rounded-xl  p-0
         ${
           isDashboard
             ? "rounded-xl py-3 px-4 flex flex-col gap-5"
             : isGrid
-              ? "rounded-md p-4 flex flex-col gap-4"
-              : "rounded-md p-2"
+              ? "rounded-xl p-4 flex flex-col gap-4"
+              : "rounded-md px-3 py-4"
         }
       `}
     >
-      {/* Header */}
       {!isStack && (
         <div className=" flex items-center justify-between">
           <h2
@@ -92,10 +94,10 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
         </div>
       )}
 
-      {/* Layout */}
       <div
-        className={`grid ${
-          isGrid || isDashboard ? "grid-cols-2 gap-3" : "grid-cols-1 gap-2"
+        className={`grid items-stretch ${
+          isGrid ? "grid-cols-1 xl:grid-cols-2 gap-3" : isDashboard ? "grid-cols-2 gap-3" :"grid-cols-1 gap-2"
+          // isGrid || isDashboard ? "grid-cols-1 xl:grid-cols-2 gap-3" : "grid-cols-1 gap-2"
         }`}
       >
         {leaveData.map((item, i) => {
@@ -104,18 +106,17 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
             <div
               key={i}
               className={`
-                flex items-center border border-[#D9E2F2] bg-white
+                h-full flex items-center border border-[#D9E2F2] bg-white
 
                 ${
                   isDashboard
                     ? "rounded-sm py-5 px-3 gap-3"
                     : isGrid
-                      ? "rounded-md py-5 px-3 gap-3"
+                      ? "rounded-md py-10 px-3 gap-3"
                       : "rounded-sm p-2.5 gap-5"
                 }
               `}
             >
-              {/* LEFT */}
               <div
                 className={`flex flex-1 flex-col ${
                   isDashboard ? "gap-1" : isGrid ? "gap-1" : "gap-1"
@@ -160,7 +161,6 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
                 </div>
               </div>
 
-              {/* RIGHT ICON */}
               <div>
                 <Image
                   src={iconSrc}
@@ -178,13 +178,13 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
         })}
       </div>
 
-      {/* Bottom Button */}
       {isDashboard && (
         <Button
-          className="w-full rounded-sm py-5"
+          className="w-full rounded-sm py-5 flex gap-2"
           onClick={() => router.push("/timehub/leaves/apply")}
         >
-          Apply Leave →
+          Apply Leave
+          <MoveRight className="h-4 w-4" />
         </Button>
       )}
     </div>

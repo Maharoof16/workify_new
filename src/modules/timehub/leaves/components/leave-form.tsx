@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { ChevronDown, CloudUpload, File } from "lucide-react";
+import { ChevronDown, CloudUpload, File, MoveRight } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useRouter } from "next/navigation";
@@ -69,7 +69,7 @@ export default function LeaveForm() {
 
   const renderDateField = (name: "fromDate" | "toDate", label: string) => (
     <div className="col-span-3">
-      <label className="label-primary">{label}</label>
+      <label className="label-primary label-required">{label}</label>
 
       <Controller
         name={name}
@@ -83,19 +83,30 @@ export default function LeaveForm() {
               <Popover
                 open={popoverOpen[name]}
                 onOpenChange={(open) =>
-                  setPopoverOpen((prev) => ({ ...prev, [name]: open }))
+                  setPopoverOpen((prev) => ({
+                    ...prev,
+                    [name]: open,
+                  }))
                 }
               >
                 <PopoverTrigger asChild>
                   <Button
                     type="button"
                     variant="outline"
-                    className={`w-full justify-between font-normal ${
-                      errors[name] ? "border-red-500" : ""
-                    }`}
+                    className={`
+                    min-h-10 w-full justify-between
+                    rounded-sm bg-white text-sm font-normal shadow-none
+
+                    ${
+                      errors[name]
+                        ? "border border-red-500"
+                        : "border border-input"
+                    }
+                  `}
                   >
                     {field.value || `Select ${label}`}
-                    <ChevronDown className="w-4 h-4" />
+
+                    <ChevronDown className="h-4 w-4 shrink-0" />
                   </Button>
                 </PopoverTrigger>
 
@@ -105,6 +116,7 @@ export default function LeaveForm() {
                     selected={selectedDate}
                     onSelect={(date) => {
                       field.onChange(formatDate(date));
+
                       setPopoverOpen((prev) => ({
                         ...prev,
                         [name]: false,
@@ -151,7 +163,7 @@ export default function LeaveForm() {
     }
 
     setSelectedFile(file);
-    setValue("files", fileList ?? undefined); 
+    setValue("files", fileList ?? undefined);
   };
 
   const sessionOptions: { label: string; value: SessionType }[] = [
@@ -164,11 +176,10 @@ export default function LeaveForm() {
     <div className="w-full mx-auto h-full">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-6 gap-x-3 gap-y-1 "
+        className="grid grid-cols-6 gap-4"
       >
-        {/* Leave Type */}
         <div className="col-span-6 md:col-span-3">
-          <label className="label-primary">Leave Type</label>
+          <label className="label-primary label-required">Leave Type</label>
 
           <Controller
             name="leaveType"
@@ -185,11 +196,15 @@ export default function LeaveForm() {
                 ]}
                 onChange={(val) => field.onChange(val)}
                 trim={false}
-                className={
-                  errors.leaveType
-                    ? "border border-red-500 rounded-md"
-                    : "border rounded-md"
-                }
+                className={`
+                  h-10
+
+                  ${
+                    errors.leaveType
+                      ? "border border-red-500 rounded-sm"
+                      : "border rounded-sm"
+                  }
+                `}
               />
             )}
           />
@@ -197,52 +212,56 @@ export default function LeaveForm() {
           <span className="label-error">{errors.leaveType?.message}</span>
         </div>
 
-        {/* Handover */}
         <div className="col-span-6 md:col-span-3">
-          <label className="label-primary">Handover Notes</label>
+          <label className="label-primary">
+            Handover Notes
+            <span className="ml-1 text-xs text-muted-foreground">
+              (Optional)
+            </span>
+          </label>
 
           <input
             {...register("handoverNotes")}
-            className="w-full rounded-md border px-3 py-2 text-sm"
             placeholder="Enter Notes"
+            className="
+      min-h-10 w-full rounded-sm
+      border border-input bg-white
+      px-3 text-sm shadow-none
+      focus:outline-none focus:ring-0
+    "
           />
         </div>
 
-        {/* From Date */}
         <div className="col-span-6 md:col-span-3">
           {renderDateField("fromDate", "From Date")}
         </div>
 
-        {/* From Session */}
-        <div className="col-span-6 md:col-span-3">
-          <div className="h-5 my-2" />
+        <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
+  <div className="flex items-center gap-4 flex-wrap">
+    {sessionOptions.map((opt) => (
+      <div key={opt.value} className="flex items-center gap-2">
+        <Checkbox
+          checked={fromSession === opt.value}
+          onCheckedChange={() => setValue("fromSession", opt.value)}
+          className="cursor-pointer"
+        />
 
-          <div className="flex items-center gap-4 flex-wrap">
-            {sessionOptions.map((opt) => (
-              <div key={opt.value} className="flex items-center gap-2">
-                <Checkbox
-                  checked={fromSession === opt.value}
-                  onCheckedChange={() => setValue("fromSession", opt.value)}
-                  className="cursor-pointer"
-                />
-                <label className="text-sm cursor-pointer whitespace-nowrap">
-                  {opt.label}
-                </label>
-              </div>
-            ))}
-          </div>
-        </div>
+        <label className="text-sm cursor-pointer whitespace-nowrap">
+          {opt.label}
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
 
-        {/* To Date */}
         <div className="col-span-6 md:col-span-3">
           {renderDateField("toDate", "To Date")}
         </div>
 
-        {/* To Session */}
-        <div className="col-span-6 md:col-span-3">
-          <div className="h-5 my-2" />
+           <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
+  <div className="flex items-center gap-4 flex-wrap">
 
-          <div className="flex items-center gap-4 flex-wrap">
+        
             {sessionOptions.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
                 <Checkbox
@@ -258,21 +277,26 @@ export default function LeaveForm() {
           </div>
         </div>
 
-        {/* Reason */}
         <div className="col-span-6">
           <label className="label-primary">Reason For Leave</label>
 
           <textarea
             {...register("reason")}
-            className="w-full rounded-md border px-3 py-2 text-sm h-28"
+            placeholder="Enter reason"
+            className="
+      min-h-28 w-full rounded-md
+      border border-input bg-white
+      px-3 py-3 text-sm shadow-none
+      focus:outline-none focus:ring-0
+      resize-none
+    "
           />
 
           <span className="label-error">{errors.reason?.message}</span>
         </div>
-        {/* Upload */}
         <div className="col-span-6">
           <div
-            className="bg-muted border border-dashed rounded-xl py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
+            className="bg-muted border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
             onClick={() => fileInputRef.current?.click()}
           >
             <CloudUpload className="text-primary" size={30} />
@@ -300,20 +324,24 @@ export default function LeaveForm() {
           <span className="label-error">{errors.files?.message}</span>
         </div>
 
-        {/* Actions */}
-        <div className="col-span-6 flex gap-3 my-1">
-          <Button type="submit" className="px-4">
-            Apply Leave →
-          </Button>
+       <div className="col-span-6 flex items-center gap-3 my-1">
+  <Button
+    type="submit"
+    className="min-h-10 rounded-sm px-5 flex items-center gap-2"
+  >
+    Apply Leave
+    <MoveRight className="h-4 w-4" />
+  </Button>
 
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => router.back()}
-          >
-            Cancel
-          </Button>
-        </div>
+  <Button
+    type="button"
+    variant="secondary"
+    onClick={() => router.back()}
+    className="min-h-10 rounded-sm px-5"
+  >
+    Cancel
+  </Button>
+</div>
       </form>
     </div>
   );

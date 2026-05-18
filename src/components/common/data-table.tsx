@@ -328,7 +328,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className={`h-7 border-b border-(--table-header-bg) bg-(--table-header-bg) hover:none first:rounded-tl-md last:rounded-tr-md ${
+                      className={`h-7 border-b py-3 border-(--table-header-bg) bg-(--table-header-bg) hover:none first:rounded-tl-md last:rounded-tr-md ${
                         isStickyCol ? "sticky z-20" : ""
                       }`}
                       style={
@@ -572,7 +572,7 @@ export function DataTable<TData, TValue>({
               <>
                 <Button
                   variant="outline"
-                  size="sm"
+                  className="rounded-sm p-3"
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -581,13 +581,14 @@ export function DataTable<TData, TValue>({
 
                 {Array.from({ length: table.getPageCount() }, (_, i) => (
                   <Button
+                  className="rounded-sm p-3"
                     key={i}
                     variant={
                       i === table.getState().pagination.pageIndex
                         ? "default"
                         : "outline"
                     }
-                    size="sm"
+                    // size="sm"
                     onClick={() => table.setPageIndex(i)}
                   >
                     {i + 1}
@@ -596,7 +597,8 @@ export function DataTable<TData, TValue>({
 
                 <Button
                   variant="outline"
-                  size="sm"
+                  className="rounded-sm p-3"
+                  // size="sm"
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
                 >
