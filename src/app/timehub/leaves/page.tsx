@@ -203,8 +203,7 @@ export default function LeavesPage() {
                 alt="Leave"
                 className="
             w-full
-            max-w-65
-            md:max-w-[320px]
+            max-w-[420px]
             lg:max-w-full
             h-auto
             object-contain
