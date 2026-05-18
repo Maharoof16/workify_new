@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { ChevronDown, CloudUpload, File } from "lucide-react";
+import { ArrowLeft, ChevronDown, CloudUpload, File, MoveRight } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { useRouter } from "next/navigation";
@@ -70,7 +70,7 @@ export default function CancelLeaveForm() {
 
   const renderDateField = (name: "fromDate" | "toDate", label: string) => (
     <div className="col-span-3">
-      <label className="label-primary">{label}</label>
+      <label className="label-primary label-required">{label}</label>
 
       <Controller
         name={name}
@@ -84,19 +84,30 @@ export default function CancelLeaveForm() {
               <Popover
                 open={popoverOpen[name]}
                 onOpenChange={(open) =>
-                  setPopoverOpen((prev) => ({ ...prev, [name]: open }))
+                  setPopoverOpen((prev) => ({
+                    ...prev,
+                    [name]: open,
+                  }))
                 }
               >
                 <PopoverTrigger asChild>
                   <Button
                     type="button"
                     variant="outline"
-                    className={`w-full justify-between font-normal ${
-                      errors[name] ? "border-red-500" : ""
-                    }`}
+                    className={`
+                    min-h-10 w-full justify-between
+                    rounded-sm  text-sm font-normal shadow-none
+
+                    ${
+                      errors[name]
+                        ? "border border-red-500"
+                        : "border border-input"
+                    }
+                  `}
                   >
                     {field.value || `Select ${label}`}
-                    <ChevronDown className="w-4 h-4" />
+
+                    <ChevronDown className="h-4 w-4 shrink-0" />
                   </Button>
                 </PopoverTrigger>
 
@@ -106,6 +117,7 @@ export default function CancelLeaveForm() {
                     selected={selectedDate}
                     onSelect={(date) => {
                       field.onChange(formatDate(date));
+
                       setPopoverOpen((prev) => ({
                         ...prev,
                         [name]: false,
@@ -124,7 +136,6 @@ export default function CancelLeaveForm() {
       />
     </div>
   );
-
   const sessionOptions: { label: string; value: SessionType }[] = [
     { label: "Full Day", value: "FULL" },
     { label: "First Half-Day", value: "FIRST_HALF" },
@@ -135,11 +146,10 @@ export default function CancelLeaveForm() {
     <div className="w-full mx-auto h-full">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-6 gap-x-3 gap-y-1 "
+        className="grid grid-cols-6 gap-4"
       >
-        {/* Leave Type */}
         <div className="col-span-6 md:col-span-3">
-          <label className="label-primary">Leave Type</label>
+          <label className="label-primary label-required">Leave Type</label>
 
           <Controller
             name="leaveType"
@@ -156,11 +166,15 @@ export default function CancelLeaveForm() {
                 ]}
                 onChange={(val) => field.onChange(val)}
                 trim={false}
-                className={
-                  errors.leaveType
-                    ? "border border-red-500 rounded-md"
-                    : "border rounded-md"
-                }
+                className={`
+                  h-10
+
+                  ${
+                    errors.leaveType
+                      ? "border border-red-500 rounded-sm"
+                      : "border rounded-sm"
+                  }
+                `}
               />
             )}
           />
@@ -168,26 +182,26 @@ export default function CancelLeaveForm() {
           <span className="label-error">{errors.leaveType?.message}</span>
         </div>
 
-        {/* Handover */}
         <div className="col-span-6 md:col-span-3">
           <label className="label-primary">Handover Notes</label>
 
           <input
             {...register("handoverNotes")}
-            className="w-full rounded-md border px-3 py-2 text-sm"
             placeholder="Enter Notes"
+            className="
+      min-h-10 w-full rounded-sm
+      border border-input 
+      px-3 text-sm shadow-none
+      focus:outline-none focus:ring-0
+    "
           />
         </div>
 
-        {/* From Date */}
         <div className="col-span-6 md:col-span-3">
           {renderDateField("fromDate", "From Date")}
         </div>
 
-        {/* From Session */}
-        <div className="col-span-6 md:col-span-3">
-          <div className="h-5 my-2" />
-
+        <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
           <div className="flex items-center gap-4 flex-wrap">
             {sessionOptions.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
@@ -196,6 +210,7 @@ export default function CancelLeaveForm() {
                   onCheckedChange={() => setValue("fromSession", opt.value)}
                   className="cursor-pointer"
                 />
+
                 <label className="text-sm cursor-pointer whitespace-nowrap">
                   {opt.label}
                 </label>
@@ -204,15 +219,11 @@ export default function CancelLeaveForm() {
           </div>
         </div>
 
-        {/* To Date */}
         <div className="col-span-6 md:col-span-3">
           {renderDateField("toDate", "To Date")}
         </div>
 
-        {/* To Session */}
-        <div className="col-span-6 md:col-span-3">
-          <div className="h-5 my-2" />
-
+        <div className="col-span-6 md:col-span-3 flex xl:items-center xl:my-3 h-full">
           <div className="flex items-center gap-4 flex-wrap">
             {sessionOptions.map((opt) => (
               <div key={opt.value} className="flex items-center gap-2">
@@ -229,9 +240,10 @@ export default function CancelLeaveForm() {
           </div>
         </div>
 
-        {/* Cancellation Reason */}
         <div className="col-span-6 ">
-          <label className="label-primary">Reason for Cancellation</label>
+          <label className="label-primary label-required">
+            Reason for Cancellation
+          </label>
 
           <Controller
             name="cancellationReason"
@@ -265,11 +277,14 @@ export default function CancelLeaveForm() {
                 ]}
                 onChange={(val) => field.onChange(val)}
                 trim={false}
-                className={
-                  errors.cancellationReason
-                    ? "border border-red-500 rounded-md"
-                    : "border rounded-md"
-                }
+                className={`
+                    h-10
+                  ${
+                    errors.cancellationReason
+                      ? "border border-red-500 rounded-sm"
+                      : "border rounded-sm"
+                  }
+                `}
               />
             )}
           />
@@ -279,32 +294,44 @@ export default function CancelLeaveForm() {
           </span>
         </div>
 
-        {/* Description */}
         <div className="col-span-6">
           <label className="label-primary">Description</label>
 
           <textarea
             {...register("description")}
-            className="w-full rounded-md border px-3 py-2 text-sm h-40"
+            placeholder="Enter description"
+            className={`
+      min-h-40 w-full resize-none
+      rounded-sm bg-white
+      px-3 py-3 text-sm
+      shadow-none focus:outline-none focus:ring-0
+
+      ${errors.description ? "border border-red-500" : "border border-input"}
+    `}
           />
 
           <span className="label-error">{errors.description?.message}</span>
         </div>
 
-        {/* Actions */}
-        <div className="col-span-6 flex gap-3 my-1">
-          <Button type="submit" className="px-4">
-            Cancel Leave →
-          </Button>
+        <div className="col-span-6 flex items-center gap-3 my-1">
+  <Button
+    type="submit"
+    className="min-h-10 rounded-sm px-5 flex items-center gap-2"
+  >
+    Cancel Leave
+    <MoveRight className="h-4 w-4" />
+  </Button>
 
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => router.back()}
-          >
-            Go Back to Leave
-          </Button>
-        </div>
+  <Button
+    type="button"
+    variant="secondary"
+    onClick={() => router.back()}
+    className="min-h-10 rounded-sm px-5 flex items-center gap-2"
+  >
+    <ArrowLeft className="h-4 w-4" />
+    Go Back to Leave
+  </Button>
+</div>
       </form>
     </div>
   );
