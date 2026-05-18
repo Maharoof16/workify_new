@@ -1,5 +1,6 @@
-import AttendancePolicyCard from "@/components/attendance/attendancePolicy";
-import RegularizationForm from "@/components/attendance/regularization-form";
+import AttendancePolicyCard from "@/modules/timehub/attendance/components/attendancePolicy";
+import RegularizationForm from "@/modules/timehub/attendance/components/regularization-form";
+
 
 
 const RegularizeAttendance = () => {

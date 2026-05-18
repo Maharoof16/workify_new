@@ -10,7 +10,7 @@ import weatherIcon from "@/assets/Weather.png";
 import timehubIcon from "@/assets/TimeHub-clock.png";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { DashboardService } from "@/services/dashboard.service";
+import { DashboardService } from "@/modules/dashboard/dashboard.service";
 
 export default function GreetingBanner() {
   const [location, setLocation] = useState("");

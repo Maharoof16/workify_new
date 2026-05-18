@@ -1,5 +1,6 @@
-import CompOffPolicyCard from "@/components/leaves/comp-off-policies";
-import CompOffForm from "@/components/leaves/compoff-form";
+import CompOffPolicyCard from "@/modules/timehub/leaves/components/comp-off-policies";
+import CompOffForm from "@/modules/timehub/leaves/components/compoff-form";
+
 
 const Page = () => {
   return (

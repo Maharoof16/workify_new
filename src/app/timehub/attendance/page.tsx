@@ -13,8 +13,8 @@ import { CalendarIcon } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
-import { AttendanceSummary } from "@/components/attendance/metric-cards";
 import { buildColumns } from "@/lib/table-utils";
+import { AttendanceSummary } from "@/modules/timehub/attendance/components/metric-cards";
 
 type LogStatus = "PRESENT" | "LATE" | "ABSENT";
 

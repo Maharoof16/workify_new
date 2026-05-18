@@ -1,7 +1,7 @@
 "use client";
 
+import { CardContent } from "@/components/ui/card";
 import { CalendarDays, Download, AlertCircle, Check, X } from "lucide-react";
-import { CardContent } from "../ui/card";
 
 const activities = [
   {

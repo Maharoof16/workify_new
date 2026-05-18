@@ -1,7 +1,8 @@
 "use client"
 
-import { CalendarCard } from "@/components/holidays/holiday-calender";
-import { HolidayList } from "@/components/holidays/holiday-list";
+
+import { CalendarCard } from "@/modules/timehub/holidays/components/holiday-calender";
+import { HolidayList } from "@/modules/timehub/holidays/components/holiday-list";
 import { useState } from "react";
 
 

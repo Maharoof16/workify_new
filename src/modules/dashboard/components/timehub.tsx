@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import {
   Clock,
   Clock3,
@@ -9,8 +11,6 @@ import {
   TimerReset,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "../ui/button";
-import { SearchableSelect } from "../ui/searchable-select";
 
 type AttendanceStatus =
   | "CHECKED_IN"
@@ -190,8 +190,7 @@ const initialAttendance: Attendance = {
 /* -------------------------------------------------------------------------- */
 
 export default function TimeHub() {
-  const [mounted, setMounted] =
-  useState(false);
+  const [mounted, setMounted] = useState(false);
   const [attendance, setAttendance] = useState<Attendance>(() => {
     if (typeof window === "undefined") {
       return initialAttendance;
@@ -207,11 +206,12 @@ export default function TimeHub() {
   });
 
   useEffect(() => {
-  setMounted(true);
-}, []);
+    setMounted(true);
+  }, []);
 
-  const [loading, setLoading] = useState(false);
-
+  const [loadingAction, setLoadingAction] = useState<
+    "checkin" | "checkout" | "breakStart" | "breakEnd" | null
+  >(null);
   const [selectedShift, setSelectedShift] = useState(shifts[0]);
 
   const getHourFromTime = (time: string) => {
@@ -266,8 +266,7 @@ export default function TimeHub() {
 
   const handleCheckIn = async () => {
     try {
-      setLoading(true);
-
+      setLoadingAction("checkin");
       const position = await getCurrentLocation();
 
       const now = new Date().toISOString();
@@ -331,7 +330,7 @@ export default function TimeHub() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -341,8 +340,7 @@ export default function TimeHub() {
 
   const handleCheckOut = async () => {
     try {
-      setLoading(true);
-
+      setLoadingAction("checkout");
       const position = await getCurrentLocation();
 
       const now = new Date().toISOString();
@@ -425,7 +423,7 @@ export default function TimeHub() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -435,8 +433,7 @@ export default function TimeHub() {
 
   const handleBreakStart = async () => {
     try {
-      setLoading(true);
-
+      setLoadingAction("breakStart");
       const position = await getCurrentLocation();
 
       const payload = {
@@ -479,7 +476,7 @@ export default function TimeHub() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -491,8 +488,7 @@ export default function TimeHub() {
     try {
       if (!attendance.currentBreak) return;
 
-      setLoading(true);
-
+      setLoadingAction("breakEnd");
       const position = await getCurrentLocation();
 
       const endTime = new Date().toISOString();
@@ -543,7 +539,7 @@ export default function TimeHub() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -720,8 +716,8 @@ export default function TimeHub() {
   const checkoutDegree = attendance.end_time ? progressDeg : null;
 
   if (!mounted) {
-  return null;
-}
+    return null;
+  }
   return (
     <div
       className="
@@ -738,31 +734,29 @@ export default function TimeHub() {
     >
       {/* Header */}
       <div className="flex flex-col ">
+        <h3 className="text-base font-semibold">Personal Time Hub</h3>
+        <div>
+          <SearchableSelect
+            value={selectedShift.id}
+            options={shifts.map((shift) => ({
+              id: shift.id,
+              label: `${shift.name} (${formatHour(
+                getHourFromTime(shift.start_time),
+              )} - ${formatHour(getHourFromTime(shift.end_time))})`,
+            }))}
+            onChange={(val) => {
+              const shift = shifts.find((s) => s.id === Number(val));
 
-      <h3 className="text-base font-semibold">Personal Time Hub</h3>
-      <div >
-
-        <SearchableSelect
-          value={selectedShift.id}
-          options={shifts.map((shift) => ({
-            id: shift.id,
-            label: `${shift.name} (${formatHour(
-              getHourFromTime(shift.start_time),
-            )} - ${formatHour(getHourFromTime(shift.end_time))})`,
-          }))}
-          onChange={(val) => {
-            const shift = shifts.find((s) => s.id === Number(val));
-
-            if (shift) {
-              setSelectedShift(shift);
-            }
-          }}
-          trim={false}
-          placeholder="Select shift"
-          className="mt-2 h-11 rounded-lg border bg-white px-3 text-sm font-medium"
-          popOverWidthClass="w-[320px]"
-        />
-      </div>
+              if (shift) {
+                setSelectedShift(shift);
+              }
+            }}
+            trim={false}
+            placeholder="Select shift"
+            className="mt-2 h-11 rounded-lg border bg-white px-3 text-sm font-medium"
+            popOverWidthClass="w-[320px]"
+          />
+        </div>
       </div>
 
       {/* Content */}
@@ -866,7 +860,10 @@ export default function TimeHub() {
               </div>
             </div>
           )}
-          {attendance.breaks.map((breakItem) => {
+          {[
+            ...attendance.breaks,
+            ...(attendance.currentBreak ? [attendance.currentBreak] : []),
+          ].map((breakItem) => {
             const breakDegree = getDegreeFromTime(breakItem.startTime);
 
             const start = new Date(breakItem.startTime);
@@ -981,21 +978,21 @@ export default function TimeHub() {
           <Button
             onClick={handleCheckIn}
             variant={"default"}
-            disabled={loading}
+            disabled={loadingAction !== null}
             className="flex-1 flex gap-4 "
           >
             <Clock className="h-4 w-4 " />
-            {loading ? "Checking In..." : "Check-In"}
+            {loadingAction === "checkin" ? "Checking In..." : "Check-In"}
           </Button>
         ) : (
           <Button
             onClick={handleCheckOut}
             variant={"destructive"}
-            disabled={loading || isOnBreak}
+            disabled={loadingAction !== null || isOnBreak}
             className="flex-1 flex gap-4  "
           >
             <LogOut className="h-4 w-4 " />
-            {loading ? "Checking Out..." : "Check-Out"}
+            {loadingAction === "checkout" ? "Checking Out..." : "Check-Out"}
           </Button>
         )}
 
@@ -1003,31 +1000,31 @@ export default function TimeHub() {
           <Button
             variant={"outline"}
             onClick={handleBreakStart}
-            disabled={!isCheckedIn || loading}
+            disabled={!isCheckedIn || loadingAction !== null}
             className="flex-1 flex gap-4 "
           >
             <Hourglass className=" h-4 w-4" />
-            {loading ? "Starting..." : "Start Break"}
+            {loadingAction === "breakStart" ? "Starting..." : "Start Break"}
           </Button>
         ) : (
           <Button
-          variant={"outline"}
+            variant={"outline"}
             onClick={handleBreakEnd}
-            disabled={loading}
+            disabled={loadingAction !== null}
             className=" flex-1 flex gap-4"
           >
             <Hourglass className="h-4 w-4" />
-            {loading ? "Stopping..." : "Stop Break"}
+            {loadingAction === "breakEnd" ? "Stopping..." : "Stop Break"}
           </Button>
         )}
 
-        {/* <Button
-                onClick={resetAttendance}
-                variant="outline"
-                className="h-11 rounded-xl text-sm"
-              >
-                Reset Session
-              </Button> */}
+        <Button
+          onClick={resetAttendance}
+          variant="outline"
+          className=" flex-1 flex gap-4"
+        >
+          Reset
+        </Button>
       </div>
     </div>
   );

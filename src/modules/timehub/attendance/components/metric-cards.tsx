@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { AttendanceCard } from "./attendance-card";
 import GenericBadge from "@/components/common/generic-badge";
-import { DonutChart } from "../ui/donut";
+import { DonutChart } from "@/components/ui/donut";
 const attendanceMetrics = {
   consistency: 92,
   presentDays: 22,

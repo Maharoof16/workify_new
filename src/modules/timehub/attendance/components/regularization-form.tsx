@@ -11,7 +11,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { ChevronDown, CloudUpload, File } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Timer } from "../ui/timer";
+import { Timer } from "@/components/ui/timer";
 
 type RegularizationFormValues = {
   employeeId: string;

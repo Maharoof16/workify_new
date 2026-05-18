@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Check, X } from "lucide-react";
-import { CardContent } from "../ui/card";
 import { useEffect, useState } from "react";
-import { TFocusItem } from "@/services/dashboard";
-import { DashboardService} from "@/services/dashboard.service";
+import { TFocusItem } from "@/modules/dashboard/dashboard";
+import { DashboardService} from "@/modules/dashboard/dashboard.service";
+import { CardContent } from "@/components/ui/card";
 
 export default function FocusOfTheDay() {
   const [focusData, setFocusData] = useState<TFocusItem[]>([]);

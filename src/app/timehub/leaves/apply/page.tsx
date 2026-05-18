@@ -1,6 +1,7 @@
-import { LeaveBalanceCard } from "@/components/leaves/leave-card";
-import LeaveForm from "@/components/leaves/leave-form";
-import LeavePolicyCard from "@/components/leaves/leave-policy-card";
+import { LeaveBalanceCard } from "@/modules/timehub/leaves/components/leave-card";
+import LeaveForm from "@/modules/timehub/leaves/components/leave-form";
+import LeavePolicyCard from "@/modules/timehub/leaves/components/leave-policy-card";
+
 
 
 const ApplyLeaves = () => {

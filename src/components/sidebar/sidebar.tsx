@@ -32,22 +32,18 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
 
 const sidebarItems = [
   {
     title: "Home",
     icon: Home,
-    href: "/home",
+    href: "/",
   },
 
   {
     title: "Time Hub",
     icon: Clock3,
-    href: "/timehub",
     children: [
       {
         title: "Attendance",
@@ -100,20 +96,17 @@ const sidebarItems = [
 export default function WorkifySidebar() {
   const pathname = usePathname();
 
-  const [openMenu, setOpenMenu] =
-    React.useState<string | null>(null);
+  const [openMenu, setOpenMenu] = React.useState<string | null>(null);
 
   const toggleMenu = (title: string) => {
-    setOpenMenu((prev) =>
-      prev === title ? null : title
-    );
+    setOpenMenu((prev) => (prev === title ? null : title));
   };
 
   React.useEffect(() => {
     const activeParent = sidebarItems.find(
       (item) =>
         item.children &&
-        pathname.startsWith(item.href)
+        item.children.some((child) => pathname.startsWith(child.href)),
     );
 
     if (activeParent) {
@@ -168,25 +161,18 @@ export default function WorkifySidebar() {
               {sidebarItems.map((item) => {
                 const isActive =
                   pathname === item.href ||
-                  pathname.startsWith(
-                    `${item.href}/`
-                  );
+                  pathname.startsWith(`${item.href}/`);
 
-                const hasChildren =
-                  !!item.children;
+                const hasChildren = !!item.children;
 
                 // =========================
                 // GROUP WITH CHILDREN
                 // =========================
                 if (hasChildren) {
-                  const isOpen =
-                    openMenu === item.title;
+                  const isOpen = openMenu === item.title;
 
                   return (
-                    <Collapsible
-                      key={item.title}
-                      open={isOpen}
-                    >
+                    <Collapsible key={item.title} open={isOpen}>
                       <SidebarMenuItem>
                         {/* Parent */}
                         <div
@@ -206,26 +192,16 @@ export default function WorkifySidebar() {
                           `}
                         >
                           {/* Parent Route */}
-                          <Link
-                            href={item.href}
-                            onClick={(e) => {
-                              e.stopPropagation();
-
-                              if (
-                                item.children
-                              ) {
-                                setOpenMenu(
-                                  item.title
-                                );
-                              }
-                            }}
+                          <button
+                            type="button"
+                            onClick={() => toggleMenu(item.title)}
                             className="
-                              flex flex-1 items-center gap-2
-                              overflow-hidden
+    flex flex-1 items-center gap-2
+    overflow-hidden text-left
 
-                              group-data-[collapsible=icon]:w-full
-                              group-data-[collapsible=icon]:justify-center
-                            "
+    group-data-[collapsible=icon]:w-full
+    group-data-[collapsible=icon]:justify-center
+  "
                           >
                             <item.icon
                               className="
@@ -237,7 +213,7 @@ export default function WorkifySidebar() {
                             <span className="group-data-[collapsible=icon]:hidden">
                               {item.title}
                             </span>
-                          </Link>
+                          </button>
 
                           {/* Expand Toggle */}
                           <div
@@ -247,21 +223,13 @@ export default function WorkifySidebar() {
                               e.preventDefault();
                               e.stopPropagation();
 
-                              toggleMenu(
-                                item.title
-                              );
+                              toggleMenu(item.title);
                             }}
                             onKeyDown={(e) => {
-                              if (
-                                e.key ===
-                                  "Enter" ||
-                                e.key === " "
-                              ) {
+                              if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
 
-                                toggleMenu(
-                                  item.title
-                                );
+                                toggleMenu(item.title);
                               }
                             }}
                             className="
@@ -287,21 +255,14 @@ export default function WorkifySidebar() {
                           "
                         >
                           <div className="space-y-1">
-                            {item.children.map(
-                              (subItem) => {
-                                const isSubActive =
-                                  pathname ===
-                                  subItem.href;
+                            {item.children.map((subItem) => {
+                              const isSubActive = pathname === subItem.href;
 
-                                return (
-                                  <Link
-                                    key={
-                                      subItem.href
-                                    }
-                                    href={
-                                      subItem.href
-                                    }
-                                    className={`
+                              return (
+                                <Link
+                                  key={subItem.href}
+                                  href={subItem.href}
+                                  className={`
                                       flex items-center rounded-md
                                       px-3 py-2 text-sm
                                       transition-all
@@ -312,14 +273,11 @@ export default function WorkifySidebar() {
                                           : "text-foreground hover:bg-background/60"
                                       }
                                     `}
-                                  >
-                                    {
-                                      subItem.title
-                                    }
-                                  </Link>
-                                );
-                              }
-                            )}
+                                >
+                                  {subItem.title}
+                                </Link>
+                              );
+                            })}
                           </div>
                         </CollapsibleContent>
 
@@ -330,28 +288,20 @@ export default function WorkifySidebar() {
                             mt-2 flex-col items-center gap-2
 
                             ${
-                              isActive &&
-                              isOpen
+                              isActive && isOpen
                                 ? "group-data-[collapsible=icon]:flex"
                                 : "group-data-[collapsible=icon]:hidden"
                             }
                           `}
                         >
-                          {item.children.map(
-                            (subItem) => {
-                              const isSubActive =
-                                pathname ===
-                                subItem.href;
+                          {item.children.map((subItem) => {
+                            const isSubActive = pathname === subItem.href;
 
-                              return (
-                                <Link
-                                  key={
-                                    subItem.href
-                                  }
-                                  href={
-                                    subItem.href
-                                  }
-                                  className={`
+                            return (
+                              <Link
+                                key={subItem.href}
+                                href={subItem.href}
+                                className={`
                                     flex h-10 w-10 items-center
                                     justify-center rounded-xl
                                     transition-all
@@ -362,12 +312,11 @@ export default function WorkifySidebar() {
                                         : "text-muted-foreground hover:bg-sidebar-accent/60"
                                     }
                                   `}
-                                >
-                                  <subItem.icon className="h-4 w-4" />
-                                </Link>
-                              );
-                            }
-                          )}
+                              >
+                                <subItem.icon className="h-4 w-4" />
+                              </Link>
+                            );
+                          })}
                         </div>
                       </SidebarMenuItem>
                     </Collapsible>
@@ -378,9 +327,7 @@ export default function WorkifySidebar() {
                 // NORMAL MENU
                 // =========================
                 return (
-                  <SidebarMenuItem
-                    key={item.title}
-                  >
+                  <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
                       className="

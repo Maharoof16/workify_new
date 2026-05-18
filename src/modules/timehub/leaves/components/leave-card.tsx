@@ -2,12 +2,12 @@
 
 import { Activity, Briefcase, CalendarCheck, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 import casualLeaveIcon from "@/assets/casual-leave.png";
 import sickLeaveIcon from "@/assets/sick-leave.png";
 import earnedLeaveIcon from "@/assets/earned-leave.png";
 import compOffIcon from "@/assets/comp-off.png";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 function getProgress(used: number, total: number) {
   if (!total) return 0;

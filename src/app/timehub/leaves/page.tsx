@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LeaveBalanceCard } from "@/components/leaves/leave-card";
+import { LeaveBalanceCard } from "@/modules/timehub/leaves/components/leave-card";
 
 // ================= TYPES =================
 type LeaveStatus = "PENDING" | "APPROVED" | "REJECTED";

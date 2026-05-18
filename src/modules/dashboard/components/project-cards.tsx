@@ -1,11 +1,11 @@
 "use client";
 
+import GenericBadge from "@/components/common/generic-badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import GenericBadge from "../common/generic-badge";
 import { cn } from "@/lib/utils";
 
 type Assignee = {
