@@ -3,30 +3,26 @@
 import Image from "next/image";
 import { Check, X } from "lucide-react";
 import { CardContent } from "../ui/card";
-import profile from "@/assets/profile.png";
-
-const focusData = [
-  {
-    title: "Leave request from Priya Sharma",
-    subtitle: "Casual Leave, Mar 12-14",
-    image: profile,
-    actions: "leave",
-  },
-  {
-    title: "Complete Q1 Performance Review",
-    subtitle: "Due Mar 15",
-    image: profile,
-    actions: "priority",
-  },
-  {
-    title: "Frontend Developer - Round 2",
-    subtitle: "Scheduled Mar 11, 3:00 PM",
-    image: profile,
-    actions: "meeting",
-  },
-];
+import { useEffect, useState } from "react";
+import { TFocusItem } from "@/services/dashboard";
+import { DashboardService} from "@/services/dashboard.service";
 
 export default function FocusOfTheDay() {
+  const [focusData, setFocusData] = useState<TFocusItem[]>([]);
+
+  useEffect(() => {
+    const fetchFocusData = async () => {
+      try {
+        const response = await DashboardService.getFocus();
+        setFocusData(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchFocusData();
+  }, []);
+
   return (
     <div
       className="border border-dashboard-border
