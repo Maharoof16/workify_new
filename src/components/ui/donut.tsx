@@ -22,33 +22,39 @@ export function DonutChart({
   ];
 
   return (
-    <div
-      className="relative"
-      style={{ width: size, height: size }}
-    >
+    <div className="relative" style={{ width: size, height: size }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={[{ value: 100 }]}
             dataKey="value"
             startAngle={90}
             endAngle={-270}
             innerRadius={size / 2 - strokeWidth}
             outerRadius={size / 2}
             stroke="none"
+            isAnimationActive={false}
           >
-            {data.map((entry, index) => (
-              <Cell key={index} fill={colors[index]} />
-            ))}
+            <Cell fill={colors[1]} />
+          </Pie>
+
+          <Pie
+            data={[{ value: value }]}
+            dataKey="value"
+            startAngle={90}
+            endAngle={90 - (value / 100) * 360}
+            innerRadius={size / 2 - strokeWidth}
+            outerRadius={size / 2}
+            cornerRadius={strokeWidth / 2}
+            stroke="none"
+          >
+            <Cell fill={colors[0]} />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
 
-      {/* Center content */}
       <div className="absolute inset-0 flex items-center justify-center">
-        {centerText || (
-          <span className="text-sm font-semibold">{value}%</span>
-        )}
+        {centerText || <span className="text-sm font-semibold">{value}%</span>}
       </div>
     </div>
   );

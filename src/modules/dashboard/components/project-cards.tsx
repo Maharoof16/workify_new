@@ -70,7 +70,7 @@ export default function ProjectCards({
       p-3
       flex flex-col
       h-full
-    max-h-168.75
+    max-h-168
     "
     >
       {/* Header */}

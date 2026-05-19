@@ -17,16 +17,20 @@ import {
   isSameDay,
   parseISO,
 } from "date-fns";
-import { Pencil } from "lucide-react";
+import { ChevronDown, MoveLeft, MoveRight, Pencil } from "lucide-react";
 import { useState } from "react";
 // import { HolidayDialog } from "./holiday-dialog";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { holidayData } from "./holiday-card";
 
 const offDayConfig = {
-  type: "WEEKLY", 
-  weeklyOffDays: [0, 6], 
+  type: "WEEKLY",
+  weeklyOffDays: [0, 6],
   customDates: [],
 };
 
@@ -54,7 +58,7 @@ export function CalendarCard({
   };
 
   const openCreateDialog = (date: Date) => {
-    setHolidayId(null); // 🔥 IMPORTANT
+    setHolidayId(null);
     setSelectedDate(date);
     setOpen(true);
   };
@@ -98,149 +102,149 @@ export function CalendarCard({
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
 
   return (
-    <div className="border rounded-xl bg-card flex flex-col gap-1 p-2">
-      {/* HEADER */}
+    <div className=" flex flex-col gap-4 xl:col-span-7 rounded-xl border p-3 xl:p-6 border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold">
+        <h2 className="text-lg font-semibold">
           Holidays in {format(currentMonth, "MMMM yyyy")}
         </h2>
 
-       <div className="flex items-center gap-2">
-  {/* Prev */}
-  <Button
-    variant="ghost"
-    size="sm"
-    onClick={() =>
-      setCurrentMonth(
-        new Date(
-          currentMonth.getFullYear(),
-          currentMonth.getMonth() - 1,
-        ),
-      )
-    }
-  >
-    ←
-  </Button>
-
-  {/* Month Picker */}
-<Popover open={monthPickerOpen} onOpenChange={setMonthPickerOpen}>
-  <PopoverTrigger asChild>
-    <Button variant="outline" className="font-medium">
-      {format(currentMonth, "MMMM, yyyy")}
-    </Button>
-  </PopoverTrigger>
-
-  <PopoverContent className="w-64 p-3">
-    {/* Year */}
-    <div className="flex justify-between items-center mb-2">
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() =>
-          setCurrentMonth(
-            new Date(
-              currentMonth.getFullYear() - 1,
-              currentMonth.getMonth(),
-            ),
-          )
-        }
-      >
-        ←
-      </Button>
-
-      <span className="font-medium">
-        {currentMonth.getFullYear()}
-      </span>
-
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() =>
-          setCurrentMonth(
-            new Date(
-              currentMonth.getFullYear() + 1,
-              currentMonth.getMonth(),
-            ),
-          )
-        }
-      >
-        →
-      </Button>
-    </div>
-
-    {/* Months Grid */}
-    <div className="grid grid-cols-4 gap-2">
-      {[
-        "Jan","Feb","Mar","Apr",
-        "May","Jun","Jul","Aug",
-        "Sep","Oct","Nov","Dec"
-      ].map((m, i) => {
-        const isActive = i === currentMonth.getMonth();
-
-        return (
+        <div className="flex items-center gap-2">
           <Button
-            key={m}
-            type="button"
-            variant={isActive ? "default" : "ghost"}
+            variant="ghost"
             size="sm"
-            onClick={() => {
+            onClick={() =>
               setCurrentMonth(
-                new Date(currentMonth.getFullYear(), i),
-              );
-              setMonthPickerOpen(false);
-            }}
-            className="w-full"
+                new Date(
+                  currentMonth.getFullYear(),
+                  currentMonth.getMonth() - 1,
+                ),
+              )
+            }
           >
-            {m}
+            <MoveLeft className="w-4 h-4" />
           </Button>
-        );
-      })}
-    </div>
 
-    {/* Footer */}
-    <div className="flex justify-between mt-3">
-      <Button
-        variant="link"
-        size="sm"
-        onClick={() => {
-          const today = new Date();
-          setCurrentMonth(today);
-          setMonthPickerOpen(false);
-        }}
-      >
-        This month
-      </Button>
+          <Popover open={monthPickerOpen} onOpenChange={setMonthPickerOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="font-medium gap-1">
+                {format(currentMonth, "MMMM, yyyy")}
+              </Button>
+            </PopoverTrigger>
 
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setMonthPickerOpen(false)}
-      >
-        Close
-      </Button>
-    </div>
-  </PopoverContent>
-</Popover>
+            <PopoverContent className="w-64 p-3">
+              <div className="flex justify-between items-center">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() =>
+                    setCurrentMonth(
+                      new Date(
+                        currentMonth.getFullYear() - 1,
+                        currentMonth.getMonth(),
+                      ),
+                    )
+                  }
+                >
+                  <MoveLeft className="w-4 h-4" />
+                </Button>
 
-  {/* Next */}
-  <Button
-    variant="ghost"
-    size="sm"
-    onClick={() =>
-      setCurrentMonth(
-        new Date(
-          currentMonth.getFullYear(),
-          currentMonth.getMonth() + 1,
-        ),
-      )
-    }
-  >
-    →
-  </Button>
-</div>
+                <span className="font-medium">
+                  {currentMonth.getFullYear()}
+                </span>
+
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() =>
+                    setCurrentMonth(
+                      new Date(
+                        currentMonth.getFullYear() + 1,
+                        currentMonth.getMonth(),
+                      ),
+                    )
+                  }
+                >
+                  <MoveRight className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ].map((m, i) => {
+                  const isActive = i === currentMonth.getMonth();
+
+                  return (
+                    <Button
+                      key={m}
+                      type="button"
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => {
+                        setCurrentMonth(
+                          new Date(currentMonth.getFullYear(), i),
+                        );
+                        setMonthPickerOpen(false);
+                      }}
+                      className="w-full"
+                    >
+                      {m}
+                    </Button>
+                  );
+                })}
+              </div>
+
+              <div className="flex justify-between mt-3">
+                <Button
+                  variant="link"
+                  size="sm"
+                  onClick={() => {
+                    setCurrentMonth(new Date());
+                    setMonthPickerOpen(false);
+                  }}
+                >
+                  This month
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMonthPickerOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              setCurrentMonth(
+                new Date(
+                  currentMonth.getFullYear(),
+                  currentMonth.getMonth() + 1,
+                ),
+              )
+            }
+          >
+            <MoveRight className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
-      {/* WEEK HEADERS */}
       <div className="grid grid-cols-7 gap-1 bg-border rounded-md overflow-hidden">
         {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => (
           <div key={d} className="px-2 py-1 border rounded-t-md">
@@ -249,7 +253,6 @@ export function CalendarCard({
         ))}
       </div>
 
-      {/* CALENDAR GRID */}
       <div className="grid grid-cols-7 grid-rows-6 gap-1 ">
         {days.map((date, i) => {
           const holidaysForDay = getHoliday(date);
@@ -264,17 +267,15 @@ export function CalendarCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition"
+                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 hover:bg-none transition"
                 onClick={() => openCreateDialog(date)}
               >
-                <Pencil className="text-muted-foreground"/>
+                <Pencil className="text-muted-foreground h-2 w-2" />
               </Button>
-              {/* DATE */}
               <span className="text-xs font-medium text-muted-foreground">
                 {format(date, "d")}
               </span>
 
-              {/* CONTENT */}
               <div className="flex flex-col gap-1">
                 {off && (
                   <div className="text-[12px] px-2 py-0.5 rounded w-full bg-muted text-muted-foreground">

@@ -232,7 +232,7 @@ export default function Page() {
         <div className="xl:col-span-8 flex flex-col gap-4">
           <EmployeeFeedCard />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <HolidaysCard />
             <LeaveBalanceCard variant="dashboard" />
           </div>
