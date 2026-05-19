@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -26,6 +26,17 @@ export function Timer({
   const [minute, setMinute] = useState("00");
   const [ampm, setAmpm] = useState<"AM" | "PM">("AM");
 
+  useEffect(() => {
+    if (!value) return;
+
+    const [time, ap] = value.split(" ");
+    const [h, m] = time.split(":");
+
+    setHour(h);
+    setMinute(m);
+    setAmpm(ap as "AM" | "PM");
+  }, [value]);
+
   const hours = Array.from({ length: 12 }, (_, i) =>
     String(i + 1).padStart(2, "0"),
   );
@@ -35,8 +46,7 @@ export function Timer({
   );
 
   const updateTime = (h = hour, m = minute, ap = ampm) => {
-    const formatted = `${h}:${m} ${ap}`;
-    onChange(formatted);
+    onChange(`${h}:${m} ${ap}`);
   };
 
   return (
@@ -52,71 +62,111 @@ export function Timer({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-64 p-3">
-        <div className="flex overflow-hidden rounded-sm border bg-muted p-1">
-          {["AM", "PM"].map((ap) => (
-            <Button
-              key={ap}
-              type="button"
-              size="sm"
-              variant={ampm === ap ? "default" : "ghost"}
-              className={`
-        flex-1 rounded-sm
+      <PopoverContent align="start" className="w-auto rounded-md">
+        <div className="flex items-start gap-1.5">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] text-muted-foreground">Hour</span>
 
-        ${ap === "AM" ? "rounded-r-none" : "rounded-l-none"}
-      `}
-              onClick={() => {
-                setAmpm(ap as "AM" | "PM");
-
-                updateTime(hour, minute, ap as "AM" | "PM");
-              }}
+            <div
+              className="
+          h-48 w-19
+          overflow-y-auto rounded-sm border
+          bg-muted/20 p-0.5 custom-scrollbar
+        "
             >
-              {ap}
-            </Button>
-          ))}
-        </div>
+              {hours.map((h) => (
+                <button
+                  key={h}
+                  type="button"
+                  onClick={() => {
+                    setHour(h);
 
-        <div className="flex gap-2">
-          <div className="flex-1 max-h-40 overflow-y-auto custom-scrollbar rounded-md border">
-            {hours.map((h) => (
-              <div
-                key={h}
-                onClick={() => {
-                  setHour(h);
-                  updateTime(h, minute, ampm);
-                }}
-                className={`px-3 py-1.5 text-sm cursor-pointer text-center
-                  ${
-                    hour === h
-                      ? "bg-primary text-white font-medium"
-                      : "hover:bg-muted"
-                  }
-                `}
-              >
-                {h}
-              </div>
-            ))}
+                    updateTime(h, minute, ampm);
+                  }}
+                  className={`
+              mb-0.5 h-8 w-full rounded-sm
+              text-sm font-medium transition-all cursor-pointer
+              ${
+                hour === h
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted"
+              }
+            `}
+                >
+                  {h}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="flex-1 max-h-40 overflow-y-auto custom-scrollbar rounded-md border">
-            {minutes.map((m) => (
-              <div
-                key={m}
-                onClick={() => {
-                  setMinute(m);
-                  updateTime(hour, m, ampm);
-                }}
-                className={`px-3 py-1.5 text-sm cursor-pointer text-center
-                  ${
-                    minute === m
-                      ? "bg-primary text-white font-medium"
-                      : "hover:bg-muted"
-                  }
-                `}
-              >
-                {m}
-              </div>
-            ))}
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] text-muted-foreground">Minute</span>
+
+            <div
+              className="
+         h-48 w-19
+          overflow-y-auto rounded-sm border
+          bg-muted/20 p-0.5 custom-scrollbar
+        "
+            >
+              {minutes.map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => {
+                    setMinute(m);
+
+                    updateTime(hour, m, ampm);
+                  }}
+                  className={`
+              mb-0.5 h-8 w-full rounded-sm
+              text-sm font-medium transition-all cursor-pointer
+              ${
+                minute === m
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted"
+              }
+            `}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-[10px] text-muted-foreground">Type</span>
+
+            <div
+              className=" 
+         h-48 w-19
+          rounded-sm border bg-muted/20
+          p-0.5
+        "
+            >
+              {["AM", "PM"].map((ap) => (
+                <button
+                  key={ap}
+                  type="button"
+                  onClick={() => {
+                    setAmpm(ap as "AM" | "PM");
+
+                    updateTime(hour, minute, ap as "AM" | "PM");
+                  }}
+                  className={`
+              mb-0.5 h-8 w-full rounded-sm
+              text-sm font-medium transition-all cursor-pointer
+              ${
+                ampm === ap
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted"
+              }
+            `}
+                >
+                  {ap}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </PopoverContent>

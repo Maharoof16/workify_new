@@ -54,7 +54,7 @@ export function EmployeeFeedCard() {
                 )}
               </div>
 
-              <p className="text-xs text-textMuted max-w-8/12">
+              <p className="text-xs text-textMuted xl:max-w-8/12">
                 {item.description}
               </p>
             </div>

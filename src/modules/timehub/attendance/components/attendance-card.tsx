@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type Status = "success" | "warning" | "info" | "danger" ;
+type Status = "success" | "warning" | "info" | "danger";
 
 type Props = {
   title: string;
@@ -43,7 +43,6 @@ const statusStyles = {
     bg: "bg-danger",
     value: "text-danger",
   },
-
 };
 
 export function AttendanceCard({
@@ -69,8 +68,8 @@ export function AttendanceCard({
           className,
         )}
       >
-        <div className="flex flex-col">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-medium">{title}</p>
 
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
@@ -98,14 +97,19 @@ export function AttendanceCard({
 
   // DEFAULT
   return (
-    <div className={cn("relative border border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to rounded-xl p-4", className)}>
+    <div
+      className={cn(
+        "relative border border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to rounded-xl p-4",
+        className,
+      )}
+    >
       <div className="flex items-start gap-4">
         {children && <div className="shrink-0">{children}</div>}
 
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium">{title}</p>
 
-          {value && <h3 className="text-xl font-semibold">{value}</h3>}
+          {value && <h3 className="text-[25px] font-bold">{value}</h3>}
 
           {subtitle && (
             <p className="text-xs text-muted-foreground">{subtitle}</p>

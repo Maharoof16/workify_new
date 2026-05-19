@@ -1018,13 +1018,13 @@ export default function TimeHub() {
           </Button>
         )}
 
-        <Button
+        {/* <Button
           onClick={resetAttendance}
           variant="outline"
           className=" flex-1 flex gap-4"
         >
           Reset
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

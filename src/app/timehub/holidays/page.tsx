@@ -11,15 +11,19 @@ export default function HolidaysPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   return (
-    <div className="space-y-3 p-2">
-      <h1 className="text-2xl font-semibold">Holidays</h1>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">Holidays</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-7 gap-4">
+        <div className="col-span-5">
         <CalendarCard
           currentMonth={currentMonth}
           setCurrentMonth={setCurrentMonth}
         />
+        </div>
+        <div className="col-span-2">
         <HolidayList currentMonth={currentMonth} />
+        </div>
       </div>
     </div>
   );

@@ -11,15 +11,18 @@ import {
 import { AttendanceCard } from "./attendance-card";
 import GenericBadge from "@/components/common/generic-badge";
 import { DonutChart } from "@/components/ui/donut";
-const attendanceMetrics = {
-  consistency: 92,
-  presentDays: 22,
-  lateLogins: 3,
-  totalDuration: 635400,
-  extraDuration: 45900,
-  shortDuration: 11700,
-  regularizationPending: 2,
+
+
+type AttendanceMetricsType = {
+  consistency: number;
+  presentDays: number;
+  lateLogins: number;
+  totalDuration: number;
+  extraDuration: number;
+  shortDuration: number;
+  regularizationPending: number;
 };
+
 
 function TimeValue({
   seconds,
@@ -33,41 +36,45 @@ function TimeValue({
   const totalMinutes = Math.floor(seconds / 60);
   const h = Math.floor(totalMinutes / 60);
   const m = totalMinutes % 60;
-
-  // 🔹 COMPACT (for Extra / Short)
   if (variant === "compact") {
     return (
-      <span className="text-sm font-medium">
+      <span className="text-sm font-semibold">
         {prefix}
         {h}h {m}m
       </span>
     );
   }
-
-  // 🔹 DEFAULT (for big card)
   return (
-    <span className="flex items-end gap-1">
-      {prefix && <span className="text-xs mr-1">{prefix}</span>}
+    <span className="flex items-end gap-4">
+      {prefix && <span className="text-xs">{prefix}</span>}
 
-      <span className="text-xl font-semibold">{h}</span>
-      <span className="text-sm text-muted-foreground">h</span>
+      <div>
+        <span className="text-xl font-bold">{h}</span>
+        <span className="text-sm">h</span>
+      </div>
 
-      <span className="text-xl font-semibold ml-2">{m}</span>
-      <span className="text-sm text-muted-foreground">m</span>
+      <div>
+        <span className="text-xl font-bold">{m}</span>
+        <span className="text-sm">m</span>
+      </div>
     </span>
   );
 }
 
-export function AttendanceSummary() {
+export function AttendanceSummary({
+  metrics,
+}: {
+  metrics: AttendanceMetricsType | null;
+}) {
+  if (!metrics) return null;
   return (
     <div className="flex flex-col gap-3">
-      {/* TOP ROW */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="border border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to rounded-xl p-4 flex flex-col gap-2">
-          <h2 className="text-sm font-medium mb-2">Consistency</h2>
+        <div className="border border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to rounded-xl p-4 flex flex-col gap-5">
+          <h2 className="text-[16px] font-medium">Consistency</h2>
 
           <div className="flex justify-between items-end">
-            <DonutChart value={attendanceMetrics.consistency} />
+            <DonutChart value={metrics.consistency} />
             <GenericBadge
               label={"Excellent"}
               variant={"pill"}
@@ -78,14 +85,14 @@ export function AttendanceSummary() {
 
         <AttendanceCard
           title="Present Days"
-          value={attendanceMetrics.presentDays}
+          value={metrics.presentDays}
           status="success"
           icon={<CalendarDays />}
         />
 
         <AttendanceCard
           title="Late Logins"
-          value={attendanceMetrics.lateLogins}
+          value={metrics.lateLogins}
           status="warning"
           icon={<Clock />}
         />
@@ -93,8 +100,8 @@ export function AttendanceSummary() {
         <AttendanceCard
           title="Total Worked Hours"
           value={
-            <span className="text-2xl font-semibold">
-              <TimeValue seconds={attendanceMetrics.totalDuration} />
+            <span className="text-2xl font-bold">
+              <TimeValue seconds={metrics.totalDuration} />
             </span>
           }
           status="info"
@@ -102,14 +109,13 @@ export function AttendanceSummary() {
         />
       </div>
 
-      {/* SECOND ROW */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <AttendanceCard
           variant="metric"
           title="Extra Hours"
           value={
             <TimeValue
-              seconds={attendanceMetrics.extraDuration}
+              seconds={metrics.extraDuration}
               prefix="+"
               variant="compact"
             />
@@ -124,7 +130,7 @@ export function AttendanceSummary() {
           title="Short Hours"
           value={
             <TimeValue
-              seconds={attendanceMetrics.shortDuration}
+             seconds={metrics.shortDuration}
               prefix="-"
               variant="compact"
             />
@@ -136,7 +142,7 @@ export function AttendanceSummary() {
         <AttendanceCard
           variant="metric"
           title="Regularization Pending"
-          value={`${attendanceMetrics.regularizationPending} entries`}
+           value={`${metrics.regularizationPending} entries`}
           status="warning"
           icon={<AlertCircle />}
           rightContent={

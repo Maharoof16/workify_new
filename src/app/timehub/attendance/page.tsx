@@ -1,70 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DataTable } from "@/components/common/data-table";
 import { Badge } from "@/components/ui/badge";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { addDays, format, startOfWeek } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
+import { ArrowRight, CalendarIcon, MoveLeft, MoveRight } from "lucide-react";
+import {
+  addMonths,
+  endOfMonth,
+  format,
+  startOfMonth,
+  subMonths,
+} from "date-fns";
 import { useRouter } from "next/navigation";
 import { buildColumns } from "@/lib/table-utils";
 import { AttendanceSummary } from "@/modules/timehub/attendance/components/metric-cards";
-
-type LogStatus = "PRESENT" | "LATE" | "ABSENT";
-
-type DailyLog = {
-  id: string;
-  date: string; // ISO date
-
-  punchIn?: string; // UTC ISO
-  punchOut?: string; // UTC ISO
-
-  breakDuration?: number; // seconds
-  workedDuration?: number; // seconds
-
-  status: LogStatus;
-};
-
-const logsData: DailyLog[] = [
-  {
-    id: "1",
-    date: "2024-05-15",
-    punchIn: "2024-05-15T03:30:00Z", // 09:00 AM IST
-    punchOut: "2024-05-15T12:30:00Z", // 06:00 PM IST
-    breakDuration: 3600,
-    workedDuration: 28800,
-    status: "PRESENT",
-  },
-  {
-    id: "2",
-    date: "2024-05-14",
-    punchIn: "2024-05-14T03:45:00Z",
-    punchOut: "2024-05-14T13:00:00Z",
-    breakDuration: 3600,
-    workedDuration: 29700,
-    status: "LATE",
-  },
-  {
-    id: "3",
-    date: "2024-05-13",
-    punchIn: "2024-05-13T03:25:00Z",
-    punchOut: "2024-05-13T12:30:00Z",
-    breakDuration: 3600,
-    workedDuration: 29100,
-    status: "PRESENT",
-  },
-  {
-    id: "4",
-    date: "2024-05-10",
-    status: "ABSENT",
-  },
-];
+import {
+  AttendanceMetrics,
+  DailyLog,
+  LogStatus,
+} from "@/modules/timehub/attendance/attendance";
+import { AttendanceService } from "@/modules/timehub/attendance/attendance.service";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const StatusBadge = ({ status }: { status: LogStatus }) => {
   const map = {
@@ -106,12 +63,75 @@ function formatDuration(seconds?: number) {
 
 export default function AttendancePage() {
   const router = useRouter();
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const [currentWeek, setCurrentWeek] = useState(
-    startOfWeek(new Date(), { weekStartsOn: 1 }),
-  );
 
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeek, i));
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const [logs, setLogs] = useState<DailyLog[]>([]);
+  const [metrics, setMetrics] = useState<AttendanceMetrics | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
+
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  useEffect(() => {
+    const startDate = startOfMonth(currentMonth);
+    const endDate = endOfMonth(currentMonth);
+
+    const periodStart = format(startDate, "yyyy-MM-dd");
+    const periodEnd = format(endDate, "yyyy-MM-dd");
+
+    fetchAttendance(periodStart, periodEnd, pagination.page, pagination.limit);
+  }, [currentMonth, pagination.page, pagination.limit]);
+
+  const fetchAttendance = async (
+    start: string,
+    end: string,
+    page: number,
+    limit: number,
+  ) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setLoading(true);
+
+    try {
+      const res = await AttendanceService.getAll(
+        start,
+        end,
+        page,
+        limit,
+        controller.signal,
+      );
+
+      setLogs(res.data.attendance);
+      setMetrics(res.data.attendanceMetrics);
+
+      setPagination((prev) => ({
+        ...prev,
+        total: res.pagination.total,
+        totalPages: res.pagination.totalPages,
+      }));
+    } catch (error: any) {
+      if (error.code === "ERR_CANCELED") return;
+
+      console.error("Failed to fetch attendance:", error);
+    } finally {
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
+    }
+  };
+
   const columns = useMemo(() => {
     return buildColumns<DailyLog>({
       headers: [
@@ -166,13 +186,16 @@ export default function AttendancePage() {
             if (item.status === "ABSENT" || item.status === "LATE") {
               return (
                 <Badge
-                  className="cursor-pointer status-info"
                   onClick={() => router.push("attendance/regularize")}
+                  className="cursor-pointer status-info group flex items-center gap-1"
                 >
-                  Regularise →
+                  <span>Regularise</span>
+
+                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Badge>
               );
             }
+
             return <span className="text-muted-foreground">-</span>;
           },
         },
@@ -180,73 +203,120 @@ export default function AttendancePage() {
     });
   }, []);
 
+  function AttendanceSummarySkeleton() {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="border border-dashboard-border rounded-xl p-4 flex flex-col gap-5">
+            <Skeleton className="h-4 w-24" />
+
+            <div className="flex justify-between items-end">
+              <Skeleton className="h-28 w-28 rounded-full" />
+              <Skeleton className="h-6 w-20 rounded-full" />
+            </div>
+          </div>
+
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-10 w-16" />
+          </div>
+
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-10 w-16" />
+          </div>
+
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-32" />
+            <div className="flex gap-2">
+              <Skeleton className="h-10 w-10" /> 
+              <Skeleton className="h-10 w-10" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+
+          <div className="border rounded-xl p-4 flex flex-col gap-3">
+            <Skeleton className="h-4 w-36" />
+            <div className="flex gap-3 items-center">
+
+            <Skeleton className="h-6 w-28" />
+            <Skeleton className="h-4 w-20" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <h1 className="font-jakarta-bold ">Attendance</h1>
-        <div className="pr-10">
-          <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-2">
-                <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-xs md:text-sm font-medium">
-                  {format(weekDays[0], "MMM d")} –{" "}
-                  {format(weekDays[6], "MMM d, yyyy")}
-                </span>
-              </Button>
-            </PopoverTrigger>
+        <h1 className="text-2xl font-bold">Attendance</h1>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-sm"
+            onClick={() => setCurrentMonth((prev) => subMonths(prev, 1))}
+          >
+            <MoveLeft />
+          </Button>
 
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={currentWeek}
-                month={currentWeek}
-                onMonthChange={(month) => setCurrentWeek(month)}
-                onSelect={(date) => {
-                  if (!date) return;
-                  const start = startOfWeek(date, { weekStartsOn: 1 });
-                  setCurrentWeek(start);
-                  setCalendarOpen(false);
-                }}
-                disabled={(date) => date > new Date()}
-                modifiers={{
-                  selected: (date) =>
-                    date >= weekDays[0] && date <= weekDays[6],
-                }}
-                modifiersClassNames={{
-                  selected: "bg-primary text-white",
-                }}
-              />
-            </PopoverContent>
-          </Popover>
+          <span className="text-sm font-medium w-28 text-center">
+            {format(currentMonth, "MMMM yyyy")}
+          </span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-sm"
+            onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
+            disabled={endOfMonth(currentMonth) > new Date()}
+          >
+            <MoveRight />
+          </Button>
         </div>
       </div>
       <div>
-        <AttendanceSummary />
+        {loading ? (
+          <AttendanceSummarySkeleton />
+        ) : (
+          <AttendanceSummary metrics={metrics} />
+        )}
       </div>
 
-      <div className="border rounded-xl bg-card overflow-hidden">
-        {/* HEADER */}
-        <div className="flex justify-between px-4 py-3">
-          <h1 className="text-lg font-semibold">Daily Logs</h1>
-
-          <button className="text-sm text-primary hover:underline">
-            Download Report
-          </button>
-        </div>
-
-        {/* TABLE FIX */}
-        <div className="overflow-hidden rounded-b-xl">
-          <div className="">
-            <DataTable
-              name="dailyLogs"
-              data={logsData}
-              columns={columns}
-              loading={false}
-              visibilityToggle={false}
-              pagination={false}
-            />
+      <div className="rounded-xl bg-card overflow-x-auto">
+        <div
+          className=" space-y-3 border border-dashboard-border
+          bg-linear-to-b
+          from-dashboard-card-from
+          to-dashboard-card-to rounded-xl  p-4"
+        >
+          <div className="flex justify-between">
+            <h2 className="text-[18px] font-semibold">Daily Logs</h2>
+            <button className="text-sm text-primary hover:underline">
+              Download Report
+            </button>
           </div>
+
+          <DataTable
+            name="leaveTable"
+            data={logs}
+            columns={columns}
+            loading={loading}
+            visibilityToggle={false}
+          />
         </div>
       </div>
     </div>
