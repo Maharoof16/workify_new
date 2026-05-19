@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-// import { iconMap } from "@/lib/icon-map";
+import { iconMap } from "@/lib/icon-map";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const genericBadgeVariants = cva("text-xs items-center text-center", {
@@ -9,7 +9,8 @@ const genericBadgeVariants = cva("text-xs items-center text-center", {
     variant: {
       default: "rounded-xs py-0.5 px-1",
       pill: "rounded-full p-0 m-0 px-2 py-0",
-      transparent: "rounded-xs bg-transparent text-primary outline outline-muted-foreground/20 py-0.5 px-1",
+      transparent:
+        "rounded-xs bg-transparent text-primary outline outline-muted-foreground/20 py-0.5 px-1",
     },
   },
   defaultVariants: {
@@ -18,7 +19,8 @@ const genericBadgeVariants = cva("text-xs items-center text-center", {
 });
 
 interface GenericBadgeProps
-  extends React.ComponentPropsWithoutRef<"div">,
+  extends
+    React.ComponentPropsWithoutRef<"div">,
     VariantProps<typeof genericBadgeVariants> {
   label: string;
   color?: string;
@@ -36,7 +38,7 @@ const GenericBadge: React.FC<GenericBadgeProps> = ({
   displayIcon = true,
   ...props
 }) => {
-//   const IconElement = icon && displayIcon ? iconMap[icon] : null;
+  const IconElement = icon && displayIcon ? iconMap[icon] : null;
 
   return (
     <Badge
@@ -44,10 +46,8 @@ const GenericBadge: React.FC<GenericBadgeProps> = ({
       {...(color && { style: { backgroundColor: color } })}
       {...props}
     >
-      {/* {IconElement && <IconElement className="w-4 h-4" />} */}
-      {label && label.length > 15
-        ? `${label.slice(0, 15)}…`
-        : label}
+      {IconElement && <IconElement className="w-4 h-4" />}
+      {label && label.length > 15 ? `${label.slice(0, 15)}…` : label}
     </Badge>
   );
 };

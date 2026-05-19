@@ -30,13 +30,12 @@ export default function RootLayout({
             <div className="flex min-h-screen w-full">
               <WorkifySidebar />
 
-              <div className="flex flex-1 flex-col">
-                {/* Mobile Topbar */}
+              <div className="flex flex-1 flex-col min-w-0">
                 <header className="flex h-14 items-center border-b px-4 md:hidden">
                   <SidebarTrigger />
                 </header>
 
-                <main className="flex-1 overflow-auto p-4 md:p-6">
+                <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto p-4 md:p-6">
                   {children}
                 </main>
               </div>

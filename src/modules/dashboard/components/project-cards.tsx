@@ -1,30 +1,19 @@
 "use client";
 
 import GenericBadge from "@/components/common/generic-badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-
-type Assignee = {
-  id: string;
-  name: string;
-  avatarUrl?: string;
-};
-
-export type Project = {
-  id: string;
-  title: string;
-  status: "Open" | "Completed" | "In Progress" | "On Hold";
-  priority: "Low" | "Medium" | "High";
-  createdAt: string;
-  assignees: Assignee[];
-};
+import { GlobalOption } from "@/modules/config/config";
+import { Project } from "@/modules/my-org/projects/project";
 
 type Props = {
   projects: Project[];
+  statuses: GlobalOption[];
+  priorities: GlobalOption[];
   loading?: boolean;
 };
 
@@ -48,36 +37,28 @@ function getInitials(name?: string) {
   );
 }
 
-function getPriorityStyles(priority?: string) {
-  switch (priority) {
-    case "High":
-      return "status-danger";
-
-    case "Medium":
-      return "status-warning";
-
-    default:
-      return "status-success";
-  }
+function getPriorityConfig(priority?: string, priorities?: GlobalOption[]) {
+  return priorities?.find(
+    (item) =>
+      (item.resource === "ALL" || item.resource === "PROJECT") &&
+      item.label === priority,
+  );
 }
 
-function getStatusStyles(status?: string) {
-  switch (status) {
-    case "Completed":
-      return "status-success";
-
-    case "On Hold":
-      return "status-warning";
-
-    case "In Progress":
-      return "status-neutral";
-
-    default:
-      return "status-info";
-  }
+function getStatusConfig(status?: string, statuses?: GlobalOption[]) {
+  return statuses?.find(
+    (item) =>
+      (item.resource === "ALL" || item.resource === "PROJECT") &&
+      item.label === status,
+  );
 }
 
-export default function ProjectCards({ projects, loading }: Props) {
+export default function ProjectCards({
+  projects,
+  statuses,
+  priorities,
+  loading,
+}: Props) {
   return (
     <div
       className="
@@ -89,7 +70,7 @@ export default function ProjectCards({ projects, loading }: Props) {
       p-3
       flex flex-col
       h-full
-    max-h-[calc(5*135px)]
+    max-h-168.75
     "
     >
       {/* Header */}
@@ -102,8 +83,47 @@ export default function ProjectCards({ projects, loading }: Props) {
         }`}
       >
         {loading ? (
-          <div className="flex h-full items-center justify-center">
-            Loading...
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="
+        rounded-md
+        border border-dashboard-border
+        bg-card
+        p-3
+      "
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-8/12" />
+                    <Skeleton className="h-4 w-5/12" />
+                  </div>
+
+                  <div className="flex flex-col items-end gap-2">
+                    <Skeleton className="h-3 w-16" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <Skeleton className="h-6 w-24 rounded-full" />
+
+                  <div className="flex -space-x-2">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                      <Skeleton
+                        key={idx}
+                        className="
+                h-8 w-8
+                rounded-full
+                border-2 border-background
+              "
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : projects.length === 0 ? (
           <div className="flex h-full items-center justify-center">
@@ -112,95 +132,102 @@ export default function ProjectCards({ projects, loading }: Props) {
             </p>
           </div>
         ) : (
-          projects.map((project) => (
-            <div
-              key={project.id}
-              className="
-                rounded-md
-                border border-dashboard-border
-                bg-card
-                p-3
-              "
-            >
-              {/* Top */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h4
-                    className="
-                    leading-5
-                    wrap-break-word
-                    line-clamp-2
-                    text-sm
-                    font-semibold
-                  "
-                  >
-                    {project.title}
-                  </h4>
+          projects.map((project) => {
+            const priorityConfig = getPriorityConfig(
+              project.priority,
+              priorities,
+            );
+
+            const statusConfig = getStatusConfig(project.status, statuses);
+
+            return (
+              <div
+                key={project.id}
+                className="
+        rounded-md
+        border border-dashboard-border
+        bg-card
+        p-3
+      "
+              >
+                {/* Top */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h4
+                      className="
+              leading-5
+              wrap-break-word
+              line-clamp-2
+              text-sm
+              font-semibold
+            "
+                    >
+                      {project.title}
+                    </h4>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-2">
+                    <span
+                      className="
+              text-[11px]
+              text-muted-foreground
+              whitespace-nowrap
+            "
+                    >
+                      {getDaysAgo(project.createdAt)}
+                    </span>
+
+                    <GenericBadge
+                      label={project.priority}
+                      icon={priorityConfig?.icon}
+                      color={priorityConfig?.color}
+                      variant="pill"
+                      className="text-[12px] px-3 font-medium border-0"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
-                  <span
-                    className="
-                    text-[11px]
-                    text-muted-foreground
-                    whitespace-nowrap
-                  "
-                  >
-                    {getDaysAgo(project.createdAt)}
-                  </span>
-
+                {/* Bottom */}
+                <div className="mt-4 flex items-center justify-between gap-3">
                   <GenericBadge
-                    label={project.priority}
-                    variant="pill"
-                    className={cn(
-                      "text-[12px] px-3 font-medium border-0",
-                      getPriorityStyles(project.priority),
-                    )}
+                    label={project.status}
+                    icon={statusConfig?.icon}
+                    color={statusConfig?.color}
+                    variant="default"
+                    className="text-[12px] font-medium border-0"
                   />
+
+                  {/* Assignees */}
+                  <div className="flex -space-x-2">
+                    {(project.assignees ?? []).slice(0, 4).map((user) => (
+                      <Tooltip key={user.id}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className="
+                    h-8 w-8
+                    rounded-full
+                    border-2 border-background
+                    bg-primary/10
+                    text-primary
+                    flex items-center justify-center
+                    text-[11px]
+                    font-semibold
+                    shadow-sm
+                    cursor-default
+                  "
+                          >
+                            {getInitials(user.name)}
+                          </div>
+                        </TooltipTrigger>
+
+                        <TooltipContent>{user.name}</TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              {/* Bottom */}
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <GenericBadge
-                  label={project.status}
-                  variant="default"
-                  className={cn(
-                    "text-[12px] font-medium border-0",
-                    getStatusStyles(project.status),
-                  )}
-                />
-
-                {/* Assignees */}
-                <div className="flex -space-x-2">
-                  {(project.assignees ?? []).slice(0, 4).map((user) => (
-                    <Tooltip key={user.id}>
-                      <TooltipTrigger asChild>
-                        <div
-                          className="
-                              h-8 w-8
-                              rounded-full
-                              border-2 border-background
-                              bg-primary/10
-                              text-primary
-                              flex items-center justify-center
-                              text-[11px]
-                              font-semibold
-                              shadow-sm
-                              cursor-default
-                            "
-                        >
-                          {getInitials(user.name)}
-                        </div>
-                      </TooltipTrigger>
-
-                      <TooltipContent>{user.name}</TooltipContent>
-                    </Tooltip>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
