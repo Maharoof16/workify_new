@@ -19,157 +19,6 @@ import { PriorityService } from "@/modules/config/priorities/priorities.service"
 import { GlobalOption } from "@/modules/config/config";
 import { Project } from "@/modules/my-org/projects/project";
 
-export const dummyProjects: Project[] = [
-  {
-    id: "1",
-    title: "Workify HRMS Dashboard",
-    status: "In Progress",
-    priority: "Low",
-    createdAt: "2026-05-08T10:00:00Z",
-    assignees: [
-      {
-        id: "u1",
-        name: "Maharoof Kp",
-      },
-      {
-        id: "u2",
-        name: "Arjun S",
-      },
-      {
-        id: "u3",
-        name: "Rahul P",
-      },
-    ],
-  },
-  {
-    id: "2",
-    title: "Attendance Tracking System ",
-    status: "Open",
-    priority: "Medium",
-    createdAt: "2026-05-05T09:30:00Z",
-    assignees: [
-      {
-        id: "u4",
-        name: "Akhil R",
-      },
-      {
-        id: "u5",
-        name: "Nihal M",
-      },
-    ],
-  },
-  {
-    id: "3",
-    title: "Employee Analytics Portal",
-    status: "Completed",
-    priority: "High",
-    createdAt: "2026-05-01T14:15:00Z",
-    assignees: [
-      {
-        id: "u6",
-        name: "Sneha T",
-      },
-      {
-        id: "u7",
-        name: "Vishnu K",
-      },
-      {
-        id: "u8",
-        name: "Anjali P",
-      },
-      {
-        id: "u9",
-        name: "Rohan D",
-      },
-    ],
-  },
-  {
-    id: "4",
-    title: "Timesheet Management",
-    status: "On Hold",
-    priority: "Low",
-    createdAt: "2026-04-28T11:45:00Z",
-    assignees: [
-      {
-        id: "u10",
-        name: "Faris A",
-      },
-      {
-        id: "u11",
-        name: "Diya S",
-      },
-    ],
-  },
-  {
-    id: "5",
-    title: "Timesheet Management",
-    status: "On Hold",
-    priority: "Low",
-    createdAt: "2026-04-28T11:45:00Z",
-    assignees: [
-      {
-        id: "u10",
-        name: "Faris A",
-      },
-      {
-        id: "u11",
-        name: "Diya S",
-      },
-    ],
-  },
-  {
-    id: "6",
-    title: "Timesheet Management",
-    status: "On Hold",
-    priority: "Low",
-    createdAt: "2026-04-28T11:45:00Z",
-    assignees: [
-      {
-        id: "u10",
-        name: "Faris A",
-      },
-      {
-        id: "u11",
-        name: "Diya S",
-      },
-    ],
-  },
-  {
-    id: "7",
-    title: "Timesheet Management",
-    status: "On Hold",
-    priority: "Low",
-    createdAt: "2026-04-28T11:45:00Z",
-    assignees: [
-      {
-        id: "u10",
-        name: "Faris A",
-      },
-      {
-        id: "u11",
-        name: "Diya S",
-      },
-    ],
-  },
-  {
-    id: "8",
-    title: "Timesheet Management",
-    status: "On Hold",
-    priority: "Low",
-    createdAt: "2026-04-28T11:45:00Z",
-    assignees: [
-      {
-        id: "u10",
-        name: "Faris A",
-      },
-      {
-        id: "u11",
-        name: "Diya S",
-      },
-    ],
-  },
-];
-
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [statuses, setStatuses] = useState<GlobalOption[]>([]);
@@ -177,10 +26,10 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardData();
+    fetchProjectData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchProjectData = async () => {
     try {
       setLoading(true);
 

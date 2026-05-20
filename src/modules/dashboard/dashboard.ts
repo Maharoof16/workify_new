@@ -1,9 +1,6 @@
 import { StaticImageData } from "next/image";
 
-export type FocusAction =
-  | "leave"
-  | "priority"
-  | "meeting";
+export type FocusAction = "leave" | "priority" | "meeting";
 
 export interface TFocusItem {
   id: string;
@@ -12,3 +9,12 @@ export interface TFocusItem {
   image: string | StaticImageData;
   actions: FocusAction;
 }
+
+export type EmployeeFeed = {
+  id: string;
+  title: string;
+  tag?: string;
+  description: string;
+  imageUrl: string | StaticImageData;
+  createdAt: string;
+};
