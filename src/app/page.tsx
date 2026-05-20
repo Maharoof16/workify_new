@@ -18,36 +18,58 @@ import { StatusService } from "@/modules/config/status/status.service";
 import { PriorityService } from "@/modules/config/priorities/priorities.service";
 import { GlobalOption } from "@/modules/config/config";
 import { Project } from "@/modules/my-org/projects/project";
+import { PerformanceCard, TFocusItem } from "@/modules/dashboard/dashboard";
+import { DashboardService } from "@/modules/dashboard/dashboard.service";
 
 export default function Page() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [statuses, setStatuses] = useState<GlobalOption[]>([]);
   const [priorities, setPriorities] = useState<GlobalOption[]>([]);
+  const [performanceData, setPerformanceData] = useState<PerformanceCard[]>([]);
+  const [focusData, setFocusData] = useState<TFocusItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProjectData();
-  }, []);
+ useEffect(() => {
+  fetchDashboardData();
+}, []);
 
-  const fetchProjectData = async () => {
-    try {
-      setLoading(true);
+const fetchDashboardData = async () => {
+  setLoading(true);
 
-      const [projectRes, statusRes, priorityRes] = await Promise.all([
-        ProjectService.getAll(),
-        StatusService.getAll(),
-        PriorityService.getAll(),
-      ]);
+  ProjectService.getAll()
+    .then((res) => {
+      setProjects(res.data.data);
+    })
+    .catch(console.error);
 
-      setProjects(projectRes.data.data);
-      setStatuses(statusRes.data.data);
-      setPriorities(priorityRes.data.data);
-    } catch (error) {
-      console.error("Failed to fetch dashboard data:", error);
-    } finally {
+  StatusService.getAll()
+    .then((res) => {
+      setStatuses(res.data.data);
+    })
+    .catch(console.error);
+
+  PriorityService.getAll()
+    .then((res) => {
+      setPriorities(res.data.data);
+    })
+    .catch(console.error);
+
+  DashboardService.getPerformanceDevelopment()
+    .then((res) => {
+      setPerformanceData(res || []);
+    })
+    .catch(console.error);
+
+  DashboardService.getFocus()
+    .then((res) => {
+      setFocusData(res || []);
+    })
+    .catch(console.error)
+    .finally(() => {
       setLoading(false);
-    }
-  };
+    });
+};
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 w-full">
       <div className="xl:col-span-12">
@@ -59,7 +81,7 @@ export default function Page() {
       </div>
 
       <div className="xl:col-span-8 flex flex-col gap-4">
-        <FocusOfTheDay />
+         <FocusOfTheDay data={focusData} loading={loading} />
         <ActionItemsCard />
       </div>
 
@@ -73,7 +95,7 @@ export default function Page() {
       </div>
 
       <div className="xl:col-span-8 flex flex-col gap-4">
-        <PerformanceDevelopment />
+        <PerformanceDevelopment data={performanceData} loading={loading}/>
         <ActivitiesCard />
       </div>
 

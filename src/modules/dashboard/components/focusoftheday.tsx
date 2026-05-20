@@ -4,25 +4,20 @@ import Image from "next/image";
 import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TFocusItem } from "@/modules/dashboard/dashboard";
-import { DashboardService} from "@/modules/dashboard/dashboard.service";
+import { DashboardService } from "@/modules/dashboard/dashboard.service";
 import { CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function FocusOfTheDay() {
-  const [focusData, setFocusData] = useState<TFocusItem[]>([]);
+type FocusOfTheDayProps = {
+  data: TFocusItem[];
+  loading?: boolean;
+};
 
-  useEffect(() => {
-    const fetchFocusData = async () => {
-      try {
-        const response = await DashboardService.getFocus();
-        setFocusData(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    fetchFocusData();
-  }, []);
-
+export default function FocusOfTheDay({
+  data = [],
+  loading = false,
+}: FocusOfTheDayProps) {
   return (
     <div
       className="border border-dashboard-border
@@ -34,9 +29,27 @@ export default function FocusOfTheDay() {
         <div>
           <h3 className="text-base font-semibold py-2">Focus of the Day</h3>
         </div>
+{loading ? (
+          <div className="space-y-2">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 rounded-lg border border-[#E3ECF5] bg-white px-2 py-2"
+              >
+                <Skeleton className="h-10 w-10 rounded-full" />
 
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+
+                <Skeleton className="h-8 w-20 rounded-xl" />
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="space-y-2">
-          {focusData.map((item, index) => (
+          {data.map((item, index) => (
             <div
               key={index}
               className="flex flex-col gap-3 lg:flex-row
@@ -46,7 +59,7 @@ export default function FocusOfTheDay() {
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 overflow-hidden rounded-full">
                   <Image
-                    src={item.image}
+                    src={item.imageUrl}
                     alt={item.title}
                     width={48}
                     height={48}
@@ -96,6 +109,7 @@ export default function FocusOfTheDay() {
             </div>
           ))}
         </div>
+        )}
       </CardContent>
     </div>
   );

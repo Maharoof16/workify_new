@@ -32,21 +32,23 @@ export default function ActivitiesCard() {
   from-dashboard-card-from
   to-dashboard-card-to rounded-xl  p-0"
     >
-      <CardContent className="px-4 py-5">
-        <h3 className="text-base font-semibold py-2">Activities</h3>
+      <CardContent className="p-4">
+        <div className="flex flex-col gap-2">
 
-        <div className="space-y-3">
+        <h3 className="text-base font-semibold">Activities</h3>
+
+        <div className="space-y-1.5">
           {activities.map((item, index) => {
             const Icon = item.icon;
 
             return (
               <div
                 key={index}
-                className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between rounded-md border border-[#E3ECF5] bg-white p-3"
+                className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between rounded-md border border-[#E3ECF5] bg-white p-2"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-center gap-4">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${
                       item.type === "leave"
                         ? "bg-[#EEF4FF]"
                         : item.type === "payslip"
@@ -79,25 +81,25 @@ export default function ActivitiesCard() {
                 <div className="flex items-center gap-3 ">
                   {item.type === "leave" && (
                     <>
-                      <button className="cursor-pointer flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-[#EAF8EF] transition hover:scale-105">
-                        <Check className="h-3 w-3 md:h-5 md:w-5 text-[#17B26A]" />
+                      <button className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl bg-[#EAF8EF] transition hover:scale-105">
+                        <Check className="h-3 w-3 md:h-4 md:w-4 text-[#17B26A]" />
                       </button>
 
-                      <button className="cursor-pointer flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-[#FFF1F1] transition hover:scale-105">
-                        <X className="h-3 w-3 md:h-5 md:w-5 text-[#F04438]" />
+                      <button className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFF1F1] transition hover:scale-105">
+                        <X className="h-3 w-3 md:h-4 md:w-4 text-[#F04438]" />
                       </button>
                     </>
                   )}
 
                   {item.type === "payslip" && (
-                    <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-[#D6E4F2] bg-white px-4 py-2 text-xs md:text-sm font-medium text-[#1683E2] transition hover:bg-[#F3F8FF]">
+                    <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-[#D6E4F2] bg-white px-4 py-1.5 text-xs md:text-[14px] font-medium text-[#1683E2] transition hover:bg-[#F3F8FF]">
                       <Download className="h-3 w-3 md:h-4 md:w-4" />
                       Download
                     </button>
                   )}
 
                   {item.type === "timesheet" && (
-                    <button className="cursor-pointer rounded-lg bg-[#1683E2] px-5 py-2 text-xs md:text-sm font-medium text-white transition hover:opacity-90">
+                    <button className="cursor-pointer rounded-lg bg-[#1683E2] px-5 py-1.5 text-xs md:text-[14px] font-medium text-white transition hover:opacity-90">
                       Submit
                     </button>
                   )}
@@ -105,6 +107,7 @@ export default function ActivitiesCard() {
               </div>
             );
           })}
+        </div>
         </div>
       </CardContent>
     </div>

@@ -2,46 +2,19 @@
 
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import training from "@/assets/traininggoals.png";
-import React from "@/assets/reactjs.png";
+import Image, { StaticImageData } from "next/image";
+import { PerformanceCard } from "../dashboard";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const performanceCards = [
-  {
-    title: "Training Goals",
-    completed: "5 / 7 Completed",
-    progress: 70,
-    image: training,
-    items: [
-      {
-        name: "Javascript Basics",
-        status: "In Progress",
-      },
-      {
-        name: "Advanced CSS",
-        status: "Completed",
-      },
-    ],
-  },
-  {
-    title: "React JS Certification",
-    completed: "1 / 3 Achieved",
-    progress: 35,
-    image: React,
-    items: [
-      {
-        name: "React Fundamentals",
-        status: "Certified",
-      },
-      {
-        name: "React Hooks",
-        status: "In Progress",
-      },
-    ],
-  },
-];
+type PerformanceDevelopmentProps = {
+  data: PerformanceCard[];
+  loading?: boolean;
+};
 
-export default function PerformanceDevelopment() {
+export default function PerformanceDevelopment({
+  data = [],
+  loading = false,
+}: PerformanceDevelopmentProps) {
   return (
     <div
       className="border border-dashboard-border
@@ -49,84 +22,121 @@ export default function PerformanceDevelopment() {
   from-dashboard-card-from
   to-dashboard-card-to rounded-xl  p-0"
     >
-      <CardContent className="px-4 py-5">
+      <CardContent className="p-4">
         <h3 className="text-base font-semibold py-2">
           Performance & Development
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {performanceCards.map((card, index) => {
-            return (
+        {loading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {Array.from({ length: 2 }).map((_, i) => (
               <div
-                key={index}
-                className="rounded-md border border-[#E2EAF3] bg-white/70 backdrop-blur-sm p-5"
+                key={i}
+                className="rounded-md border border-[#E2EAF3] bg-white/70 p-3 space-y-5"
               >
-                <div className="flex items-start gap-3">
-                  <div className="relative h-11 w-11 overflow-hidden rounded-full bg-[#EAF6FF]">
-                    <Image
-                      src={card.image || ""}
-                      alt={card.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <h3 className="text-[18px] font-semibold text-[#16315C]">
-                      {card.title}
-                    </h3>
-
-                    <p className="mt-1 text-sm text-[#7D8CA1]">
-                      {card.completed}
-                    </p>
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-11 w-11 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-3 w-1/2" />
                   </div>
                 </div>
 
-                <div className="mt-5 flex gap-[2px]">
-                  {[1, 2, 3, 4, 5, 6, 7].map((item) => (
-                    <div
-                      key={item}
-                      className={`h-3 flex-1 rounded-sm ${
-                        item <= Math.round(card.progress / 14)
-                          ? "bg-linear-to-b from-[#47BD47] to-[#08A749]"
-                          : "bg-[#E8F0F8]"
-                      }`}
-                    />
-                  ))}
+                <Skeleton className="h-2 w-full" />
+
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
                 </div>
 
-                <div className="mt-5 space-y-2">
-                  {card.items.map((item, idx) => (
-                    <div key={idx}>
-                      <div className="flex items-center justify-between">
-                        <p className="text-[15px] text-[#2E3C54]">
-                          {item.name}
-                        </p>
-
-                        <span className="text-sm text-[#98A4B5]">
-                          {item.status}
-                        </span>
-                      </div>
-
-                      {idx !== card.items.length - 1 && (
-                        <div className="mt-2 border-b border-[#EEF2F6]" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex justify-center">
-                  <Button
-                    variant="outline"
-                    className="h-8 rounded-sm border border-[#D9E5F2] bg-[#F6FAFE] px-5 py-4 text-xs font-medium text-[#1683E2] hover:bg-[#EEF6FF]"
-                  >
-                    View Goals
-                  </Button>
-                </div>
+                <Skeleton className="h-8 w-24 mx-auto" />
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {data.map((card, index) => {
+              const completed = `${card.completedModules} / ${card.totalModules} Completed`;
+
+              const progress =
+                (card.completedModules / card.totalModules) * 100;
+
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 rounded-md border border-[#E2EAF3] bg-white/70 backdrop-blur-sm p-3"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="relative h-11 w-11 overflow-hidden rounded-full bg-[#EAF6FF]">
+                      <Image
+                        src={card.imageUrl}
+                        alt={card.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <div className="flex-1">
+                      <h3 className="text-[16px] font-semibold text-[#16315C]">
+                        {card.title}
+                      </h3>
+
+                      <p className="text-xs text-[#7D8CA1]">{completed}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-[2px]">
+                    {Array.from({ length: card.totalModules }).map(
+                      (_, index) => (
+                        <div
+                          key={index}
+                          className={`h-2 flex-1 rounded-sm ${
+                            index < card.completedModules
+                              ? "bg-linear-to-b from-[#47BD47] to-[#08A749]"
+                              : "bg-[#E8F0F8]"
+                          }`}
+                        />
+                      ),
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    {card.items.slice(0, 2).map((item, idx) => (
+                      <div key={idx}>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[15px] text-[#2E3C54]">
+                            {item.title}
+                          </p>
+
+                          <span className="text-[14px] text-[#98A4B5]">
+                            {item.status === "NOT_STARTED"
+                              ? "Not Started"
+                              : item.status === "IN_PROGRESS"
+                                ? "In Progress"
+                                : "Completed"}
+                          </span>
+                        </div>
+
+                        {idx !== card.items.length - 1 && (
+                          <div className="py-1 border-b border-[#EEF2F6]" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-center">
+                    <Button
+                      variant="outline"
+                      className="h-8 rounded-sm border border-[#D9E5F2] bg-[#F6FAFE] px-5 py-4 text-xs font-medium text-[#1683E2] hover:bg-[#EEF6FF]"
+                    >
+                      View Goals
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </div>
   );

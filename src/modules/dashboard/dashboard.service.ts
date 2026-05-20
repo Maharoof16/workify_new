@@ -1,32 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
 import { TFocusItem } from "./dashboard";
-import profile from "@/assets/profile.png";
-import { EmployeeFeedData } from "./dashboard.mock";
+import { EmployeeFeedData, mockFocusData, performanceCards } from "./dashboard.mock";
 import { mockApi } from "@/lib/mock-api";
 
-const mockFocusData: TFocusItem[] = [
-  {
-    id: "1",
-    title: "Leave request from Priya Sharma",
-    subtitle: "Casual Leave, Mar 12-14",
-    image: profile,
-    actions: "leave",
-  },
-  {
-    id: "2",
-    title: "Complete Q1 Performance Review",
-    subtitle: "Due Mar 15",
-    image: profile,
-    actions: "priority",
-  },
-  {
-    id: "3",
-    title: "Frontend Developer - Round 2",
-    subtitle: "Scheduled Mar 11, 3:00 PM",
-    image: profile,
-    actions: "meeting",
-  },
-];
 
 const USE_MOCK_API = process.env.NEXT_PUBLIC_USE_MOCK_API === "true";
 
@@ -46,13 +22,19 @@ export class DashboardService {
       temperature: weatherRes?.current_weather?.temperature ?? null,
     };
   }
-  static async getFocus(): Promise<TFocusItem[]> {
-    return Promise.resolve(mockFocusData);
+  static async getFocus() {
+  if (USE_MOCK_API) {
+    const response = await mockApi(mockFocusData);
 
-    // const response = await axiosInstance.get("/dashboard/focus");
-
-    // return response.data.data
+    return response.data.data;
   }
+
+  const response = await axiosInstance.get(
+    `/dashboard/get-focus`,
+  );
+
+  return response.data.data;
+}
 
   static async getEmployeeFeed() {
     if (USE_MOCK_API) {
@@ -65,4 +47,18 @@ export class DashboardService {
 
     return response.data.data;
   }
+
+  static async getPerformanceDevelopment() {
+  if (USE_MOCK_API) {
+    const response = await mockApi(performanceCards);
+
+    return response.data.data;
+  }
+
+  const response = await axiosInstance.get(
+    `/dashboard/performance-development`,
+  );
+
+  return response.data.data;
+}
 }
