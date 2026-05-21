@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axios-instance";
 import { TFocusItem } from "./dashboard";
-import { EmployeeFeedData, mockFocusData, performanceCards } from "./dashboard.mock";
+import { activities, EmployeeFeedData, mockFocusData, performanceCards } from "./dashboard.mock";
 import { mockApi } from "@/lib/mock-api";
 
 
@@ -31,6 +31,20 @@ export class DashboardService {
 
   const response = await axiosInstance.get(
     `/dashboard/get-focus`,
+  );
+
+  return response.data.data;
+}
+
+static async getActivities() {
+  if (USE_MOCK_API) {
+    const response = await mockApi(activities);
+
+    return response.data.data;
+  }
+
+  const response = await axiosInstance.get(
+    `/dashboard/get-activities`,
   );
 
   return response.data.data;

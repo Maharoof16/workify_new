@@ -1,7 +1,15 @@
+import { LucideIcon } from "lucide-react";
 import { StaticImageData } from "next/image";
 
 export type FocusAction = "leave" | "priority" | "meeting";
+export type TActivityType = "leave" | "payslip" | "timesheet";
 
+export type TActivityItem = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  type: TActivityType;
+};
 export interface TFocusItem {
   id: string;
   title: string;

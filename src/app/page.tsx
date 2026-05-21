@@ -18,7 +18,11 @@ import { StatusService } from "@/modules/config/status/status.service";
 import { PriorityService } from "@/modules/config/priorities/priorities.service";
 import { GlobalOption } from "@/modules/config/config";
 import { Project } from "@/modules/my-org/projects/project";
-import { PerformanceCard, TFocusItem } from "@/modules/dashboard/dashboard";
+import {
+  PerformanceCard,
+  TActivityItem,
+  TFocusItem,
+} from "@/modules/dashboard/dashboard";
 import { DashboardService } from "@/modules/dashboard/dashboard.service";
 
 export default function Page() {
@@ -28,47 +32,54 @@ export default function Page() {
   const [performanceData, setPerformanceData] = useState<PerformanceCard[]>([]);
   const [focusData, setFocusData] = useState<TFocusItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activitiesData, setActivitiesData] = useState<TActivityItem[]>([]);
 
- useEffect(() => {
-  fetchDashboardData();
-}, []);
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
-const fetchDashboardData = async () => {
-  setLoading(true);
+  const fetchDashboardData = async () => {
+    setLoading(true);
 
-  ProjectService.getAll()
-    .then((res) => {
-      setProjects(res.data.data);
-    })
-    .catch(console.error);
+    ProjectService.getAll()
+      .then((res) => {
+        setProjects(res.data.data);
+      })
+      .catch(console.error);
 
-  StatusService.getAll()
-    .then((res) => {
-      setStatuses(res.data.data);
-    })
-    .catch(console.error);
+    StatusService.getAll()
+      .then((res) => {
+        setStatuses(res.data.data);
+      })
+      .catch(console.error);
 
-  PriorityService.getAll()
-    .then((res) => {
-      setPriorities(res.data.data);
-    })
-    .catch(console.error);
+    PriorityService.getAll()
+      .then((res) => {
+        setPriorities(res.data.data);
+      })
+      .catch(console.error);
 
-  DashboardService.getPerformanceDevelopment()
-    .then((res) => {
-      setPerformanceData(res || []);
-    })
-    .catch(console.error);
+    DashboardService.getPerformanceDevelopment()
+      .then((res) => {
+        setPerformanceData(res || []);
+      })
+      .catch(console.error);
 
-  DashboardService.getFocus()
-    .then((res) => {
-      setFocusData(res || []);
-    })
-    .catch(console.error)
-    .finally(() => {
-      setLoading(false);
-    });
-};
+    DashboardService.getFocus()
+      .then((res) => {
+        setFocusData(res || []);
+      })
+      .catch(console.error);
+
+    DashboardService.getActivities()
+      .then((res) => {
+        setActivitiesData(res || []);
+      })
+      .catch(console.error)
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 w-full">
@@ -81,7 +92,7 @@ const fetchDashboardData = async () => {
       </div>
 
       <div className="xl:col-span-8 flex flex-col gap-4">
-         <FocusOfTheDay data={focusData} loading={loading} />
+        <FocusOfTheDay data={focusData} loading={loading} />
         <ActionItemsCard />
       </div>
 
@@ -95,8 +106,8 @@ const fetchDashboardData = async () => {
       </div>
 
       <div className="xl:col-span-8 flex flex-col gap-4">
-        <PerformanceDevelopment data={performanceData} loading={loading}/>
-        <ActivitiesCard />
+        <PerformanceDevelopment data={performanceData} loading={loading} />
+        <ActivitiesCard data={activitiesData} loading={loading}/>
       </div>
 
       <div className="xl:col-span-12 grid grid-cols-1 xl:grid-cols-12 gap-4">

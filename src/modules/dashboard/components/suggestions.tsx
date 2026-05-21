@@ -47,7 +47,7 @@ export function SuggestionsCard() {
       from-dashboard-card-from
       to-dashboard-card-to"
     >
-      <CardContent className="px-4 py-3 flex flex-col gap-2">
+      <CardContent className="p-4 flex flex-col gap-2">
           <h3 className="text-base font-semibold py-2">
           Suggestions
         </h3>
@@ -59,9 +59,9 @@ export function SuggestionsCard() {
             return (
               <div
                 key={i}
-                className={`rounded-md border border-[#E5EDF5] p-4 min-h-[180px] flex flex-col justify-between ${item.cardBg}`}
+                className={`rounded-md border border-[#E5EDF5] p-4 min-h-44 flex flex-col justify-between ${item.cardBg}`}
               >
-                <div className="flex gap-4">
+                <div className="flex gap-5">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-full ${item.iconBg}`}
                   >

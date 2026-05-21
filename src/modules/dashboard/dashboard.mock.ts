@@ -3,7 +3,30 @@ import appraisal from "@/assets/appraisal.png";
 import training from "@/assets/traininggoals.png";
 import React from "@/assets/reactjs.png";
 import profile from "@/assets/profile.png";
-import { EmployeeFeed, PerformanceCard, TFocusItem } from "./dashboard";
+import { EmployeeFeed, PerformanceCard, TActivityItem, TFocusItem } from "./dashboard";
+import { AlertCircle, CalendarDays, Download } from "lucide-react";
+
+
+export const activities: TActivityItem[] = [
+  {
+    title: "Time off is approaching",
+    description: "Your casual leave starts on Mar 20 (3 days away).",
+    icon: CalendarDays,
+    type: "leave",
+  },
+  {
+    title: "Payslip Available",
+    description: "February 2026 payslip is ready to download.",
+    icon: Download,
+    type: "payslip",
+  },
+  {
+    title: "Timesheet Reminder",
+    description: "Week 10 timesheet not yet submitted.",
+    icon: AlertCircle,
+    type: "timesheet",
+  },
+];
 
 export const mockFocusData: TFocusItem[] = [
   {
