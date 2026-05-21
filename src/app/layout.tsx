@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import WorkifySidebar from "@/components/sidebar/sidebar";
+import WorkifySidebar from "@/components/sidebar/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Manrope } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Providers from "@/components/providers/provider";
+import { TOAST_POSITION } from "@/lib/config";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -23,25 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable}`}>
+    <html lang="en" className={`${manrope.variable}`} suppressHydrationWarning>
       <body className="bg-background">
-        <TooltipProvider>
-          <SidebarProvider>
-            <div className="flex min-h-screen w-full">
-              <WorkifySidebar />
-
-              <div className="flex flex-1 flex-col min-w-0">
-                <header className="flex h-14 items-center border-b px-4 md:hidden">
-                  <SidebarTrigger />
-                </header>
-
-                <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto p-4 md:p-6">
-                  {children}
-                </main>
-              </div>
-            </div>
-          </SidebarProvider>
-        </TooltipProvider>
+        <Providers toastPosition={TOAST_POSITION}>{children}</Providers>
       </body>
     </html>
   );

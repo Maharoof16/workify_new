@@ -38,7 +38,7 @@ const sidebarItems = [
   {
     title: "Home",
     icon: Home,
-    href: "/",
+    href: "/home",
   },
 
   {
@@ -93,7 +93,7 @@ const sidebarItems = [
   },
 ];
 
-export default function WorkifySidebar() {
+export default function AppSidebar() {
   const pathname = usePathname();
 
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
@@ -139,6 +139,8 @@ export default function WorkifySidebar() {
           "
         >
           <Image
+            priority
+            unoptimized
             src="/logo.png"
             alt="Workify Logo"
             width={140}
@@ -150,58 +152,73 @@ export default function WorkifySidebar() {
           />
 
           {/* NORMAL TRIGGER */}
-          <SidebarTrigger
-            className="
-              h-8 w-8 shrink-0
-              group-data-[collapsible=icon]:hidden
-               bg-transparent hover:bg-transparent
-                 shadow-none
-            "
-          />
+         <SidebarTrigger
+  className="
+    hidden md:flex
+
+    h-8 w-8 shrink-0
+    group-data-[collapsible=icon]:hidden
+
+    bg-transparent
+    hover:bg-transparent
+    shadow-none
+  "
+/>
 
           {/* COLLAPSED MINI LOGO */}
           <div
-            className="
-    relative hidden
-    h-10 w-10
-    group-data-[collapsible=icon]:flex
+  className="
+    relative
+    hidden
+
+    md:group-data-[collapsible=icon]:flex
+
+    h-10 w-10 shrink-0
     items-center justify-center
     overflow-hidden
-    group
+    group/logo
   "
-          >
+>
             {/* MINI LOGO */}
             <Image
+              priority
+              unoptimized
               src="/icon-mini.png"
               alt="Mini Logo"
               width={28}
               height={28}
               className="
-      absolute
-      transition-all duration-200
+  absolute
+  transition-all duration-200
 
-      group-hover:opacity-0
-      group-hover:scale-75
-    "
+  group-hover/logo:opacity-0
+  group-hover/logo:scale-75
+"
             />
 
             {/* SIDEBAR TRIGGER */}
-            <SidebarTrigger
-              className="
-      absolute inset-0
+          <SidebarTrigger
+  className="
+    hidden md:flex
 
-      opacity-0 scale-75
-      transition-all duration-200
+    absolute left-1/2 top-1/2
+    -translate-x-1/2 -translate-y-1/2
 
-      group-hover:opacity-100
-      group-hover:scale-100
+    h-8 w-8 min-w-8 p-0
 
-      bg-transparent!
-      hover:bg-transparent!
-      shadow-none
+    items-center justify-center
 
-    "
-            />
+    opacity-0 scale-75
+    transition-all duration-200
+
+    group-hover/logo:opacity-100
+    group-hover/logo:scale-100
+
+    bg-transparent!
+    hover:bg-transparent!
+    shadow-none
+  "
+/>
           </div>
         </div>
       </SidebarHeader>
@@ -210,7 +227,7 @@ export default function WorkifySidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
+            <SidebarMenu className="space-y-1">
               {sidebarItems.map((item) => {
                 const isActive = item.children
                   ? item.children.some((child) =>

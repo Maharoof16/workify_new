@@ -27,6 +27,13 @@ export type EmployeeFeed = {
   createdAt: string;
 };
 
+export type ActionItems = {
+  id?: string;
+  title: string;
+  subtitle: string;
+  imageUrl: string | StaticImageData;
+};
+
 export type PerformanceItem = {
   id: string;
   title: string;

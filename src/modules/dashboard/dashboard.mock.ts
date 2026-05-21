@@ -3,7 +3,12 @@ import appraisal from "@/assets/appraisal.png";
 import training from "@/assets/traininggoals.png";
 import React from "@/assets/reactjs.png";
 import profile from "@/assets/profile.png";
-import { EmployeeFeed, PerformanceCard, TActivityItem, TFocusItem } from "./dashboard";
+import { ActionItems, EmployeeFeed, PerformanceCard, TActivityItem, TFocusItem } from "./dashboard";
+import calendarImg from "@/assets/Calendar.png";
+import TimeSheet from "@/assets/Timesheet.png";
+import RaiseTicket from "@/assets/RaiseTicket.png";
+import Projects from "@/assets/projects.png";
+import NewRequest from "@/assets/newRequest.png";
 import { AlertCircle, CalendarDays, Download } from "lucide-react";
 
 
@@ -69,6 +74,69 @@ export const EmployeeFeedData: EmployeeFeed[] = [
       "Performance review cycle begins Apr 1. Start preparing your self-assessment and goals.",
     createdAt: "2026-05-19T08:30:00Z",
     imageUrl: appraisal,
+  },
+];
+
+// frontend config
+export const actions: ActionItems[] = [
+  {
+    title: "Apply Leave",
+    subtitle: "Request Time Off",
+    imageUrl: calendarImg,
+  },
+  {
+    title: "Time sheets",
+    subtitle: "Update Timesheets",
+    imageUrl: TimeSheet,
+  },
+  {
+    title: "Raise Ticket",
+    subtitle: "Get Support",
+    imageUrl: RaiseTicket,
+  },
+  {
+    title: "Projects",
+    subtitle: "See all the projects",
+    imageUrl: Projects,
+  },
+  {
+    title: "New Request",
+    subtitle: "Submit HR Request",
+    imageUrl: NewRequest,
+  },
+  
+];
+
+export const ActionItemsData: ActionItems[] = [
+  {
+    id: "1",
+    title: "Apply Leave",
+    subtitle: "Request Time Off",
+    imageUrl: calendarImg,
+  },
+  {
+    id: "2",
+    title: "Time sheets",
+    subtitle: "Update Timesheets",
+    imageUrl: TimeSheet,
+  },
+  {
+    id: "3",
+    title: "Raise Ticket",
+    subtitle: "Get Support",
+    imageUrl: RaiseTicket,
+  },
+  {
+    id: "4",
+    title: "Projects",
+    subtitle: "See all the projects",
+    imageUrl: Projects,
+  },
+  {
+    id: "5",
+    title: "New Request",
+    subtitle: "Submit HR Request",
+    imageUrl: NewRequest,
   },
 ];
 

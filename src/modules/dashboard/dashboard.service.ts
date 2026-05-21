@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axios-instance";
 import { TFocusItem } from "./dashboard";
-import { activities, EmployeeFeedData, mockFocusData, performanceCards } from "./dashboard.mock";
+import { activities, ActionItemsData, EmployeeFeedData, mockFocusData, performanceCards } from "./dashboard.mock";
 import { mockApi } from "@/lib/mock-api";
 
 
@@ -73,6 +73,18 @@ static async getActivities() {
     `/dashboard/performance-development`,
   );
 
-  return response.data.data;
-}
+    return response.data.data;
+  }
+
+   static async getActionItems() {
+    if (USE_MOCK_API) {
+      const response = await mockApi(ActionItemsData);
+
+      return response.data.data;
+    }
+
+    const response = await axiosInstance.get(`/dashboard/action-items`);
+
+    return response.data.data;
+  }
 }

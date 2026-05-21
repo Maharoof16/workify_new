@@ -26,7 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { holidayData } from "./holiday-card";
+import { Holiday } from "../holiday";
 
 const offDayConfig = {
   type: "WEEKLY",
@@ -36,17 +36,23 @@ const offDayConfig = {
 
 type CalendarCardProps = {
   currentMonth: Date;
-  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+
+  setCurrentMonth: React.Dispatch<
+    React.SetStateAction<Date>
+  >;
+
+  holidays: Holiday[];
+
+  loading?: boolean;
 };
 
 export function CalendarCard({
   currentMonth,
   setCurrentMonth,
+  holidays,
+  loading,
 }: CalendarCardProps) {
-  const holidays = (holidayData.holidays || []).map((h) => ({
-    ...h,
-    dateObj: parseISO(h.date),
-  }));
+
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [open, setOpen] = useState(false);
@@ -69,9 +75,15 @@ export function CalendarCard({
     }
     return offDayConfig.weeklyOffDays.includes(date.getDay());
   };
+const parsedHolidays = holidays.map((h) => ({
+  ...h,
 
-  const getHoliday = (date: Date) =>
-    holidays.filter((h) => isSameDay(h.dateObj, date));
+  dateObj: parseISO(h.date),
+}));
+ const getHoliday = (date: Date) =>
+  parsedHolidays.filter((h) =>
+    isSameDay(h.dateObj, date),
+  );
 
   const start = startOfWeek(startOfMonth(currentMonth));
   const end = endOfWeek(endOfMonth(currentMonth));
