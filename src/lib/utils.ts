@@ -25,3 +25,15 @@ export function getTimeAgo(date: string) {
 
   return `${days} Day${days > 1 ? "s" : ""} Ago`;
 }
+
+export function formatDuration(duration?: number) {
+  if (!duration) return "-";
+
+  const totalMinutes = Math.floor(duration / 1000 / 60);
+
+  const h = Math.floor(totalMinutes / 60);
+
+  const m = totalMinutes % 60;
+
+  return `${h}h ${m}m`;
+}

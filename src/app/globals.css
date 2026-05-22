@@ -78,6 +78,12 @@
 
   --color-table-header-bg: var(--table-header-bg);
   --color-table-border: var(--table-border);
+
+  --color-timehub-track: var(--timehub-track);
+  --color-timehub-success: var(--timehub-success);
+  --color-timehub-warning: var(--timehub-warning);
+  --color-timehub-danger: var(--timehub-danger);
+  --color-timehub-ring-border: var(--timehub-ring-border);
 }
 
 :root {
@@ -167,6 +173,12 @@
   /* --banner-shadow:
   0 10px 40px rgba(15, 23, 42, 0.08),
   0 4px 14px rgba(15, 23, 42, 0.05); */
+
+  --timehub-track: #e2e8f0;
+  --timehub-success: #1cc188;
+  --timehub-warning: #f3ce00;
+  --timehub-danger: #ef4444;
+  --timehub-ring-border: #5084bb;
 }
 
 .dark {
@@ -251,6 +263,12 @@
   /* --banner-shadow:
     0 20px 45px rgba(0, 0, 0, 0.45),
     0 8px 24px rgba(0, 0, 0, 0.25); */
+
+  --timehub-track: oklch(100% 0 0 / 12%);
+  --timehub-success: #34d399;
+  --timehub-warning: #fbbf24;
+  --timehub-danger: #f87171;
+  --timehub-ring-border: oklch(0.72 0.12 240);
 }
 
 @layer base {

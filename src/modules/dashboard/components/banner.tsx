@@ -11,11 +11,15 @@ import timehubIcon from "@/assets/TimeHub-clock.png";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DashboardService } from "@/modules/dashboard/dashboard.service";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { formatDuration } from "@/lib/utils";
 
 export default function GreetingBanner() {
   const [location, setLocation] = useState("");
   const [temp, setTemp] = useState<number | null>(null);
   const router = useRouter();
+  const user = useSelector((state: RootState) => state.auth?.userData);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -96,7 +100,7 @@ export default function GreetingBanner() {
             </p>
 
             <h1 className="text-xl md:text-3xl font-semibold text-primary">
-              Maharoof Kakkidiparambil
+              {user?.first_name} {user?.last_name}
             </h1>
           </div>
 
@@ -162,13 +166,15 @@ export default function GreetingBanner() {
                 </div>
               </div>
 
-              <div    className="
+              <div
+                className="
     rounded-lg p-3 w-full
     border-2 border-[var(--banner-card-border)]
     bg-[var(--banner-card-bg)]
     backdrop-blur-lg
-  ">
-                    <div className="flex items-center gap-4">
+  "
+              >
+                <div className="flex items-center gap-4">
                   <Image
                     src={timehubIcon}
                     alt="time"
@@ -176,7 +182,9 @@ export default function GreetingBanner() {
                   />
 
                   <div>
-                    <span className="font-medium text-[var(--banner-text)]">8h 12m</span>
+                    <span className="font-medium text-[var(--banner-text)]">
+                      {formatDuration(user?.worked_duration)}
+                    </span>
 
                     <p className="text-xs text-[var(--banner-muted)]">
                       Worked Today
