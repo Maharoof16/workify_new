@@ -67,13 +67,7 @@ export function Timer({
           <div className="flex flex-col items-center gap-1">
             <span className="text-[10px] text-muted-foreground">Hour</span>
 
-            <div
-              className="
-          h-48 w-19
-          overflow-y-auto rounded-sm border
-          bg-muted/20 p-0.5 custom-scrollbar
-        "
-            >
+            <div className="h-48 w-19 overflow-y-auto rounded-sm border bg-muted/20 p-0.5 custom-scrollbar">
               {hours.map((h) => (
                 <button
                   key={h}
@@ -83,14 +77,11 @@ export function Timer({
 
                     updateTime(h, minute, ampm);
                   }}
-                  className={`
-              mb-0.5 h-8 w-full rounded-sm
-              text-sm font-medium transition-all cursor-pointer
-              ${
-                hour === h
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              }
+                  className={`mb-0.5 h-8 w-full rounded-sm text-sm font-medium transition-all cursor-pointer ${
+                    hour === h
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted"
+                  }
             `}
                 >
                   {h}
@@ -102,13 +93,7 @@ export function Timer({
           <div className="flex flex-col items-center gap-1">
             <span className="text-[10px] text-muted-foreground">Minute</span>
 
-            <div
-              className="
-         h-48 w-19
-          overflow-y-auto rounded-sm border
-          bg-muted/20 p-0.5 custom-scrollbar
-        "
-            >
+            <div className="h-48 w-19 overflow-y-auto rounded-sm border bg-muted/20 p-0.5 custom-scrollbar ">
               {minutes.map((m) => (
                 <button
                   key={m}
@@ -118,14 +103,11 @@ export function Timer({
 
                     updateTime(hour, m, ampm);
                   }}
-                  className={`
-              mb-0.5 h-8 w-full rounded-sm
-              text-sm font-medium transition-all cursor-pointer
-              ${
-                minute === m
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              }
+                  className={`mb-0.5 h-8 w-full rounded-sm text-sm font-medium transition-all cursor-pointer ${
+                    minute === m
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted"
+                  }
             `}
                 >
                   {m}
@@ -137,13 +119,7 @@ export function Timer({
           <div className="flex flex-col items-center gap-1">
             <span className="text-[10px] text-muted-foreground">Type</span>
 
-            <div
-              className=" 
-         h-48 w-19
-          rounded-sm border bg-muted/20
-          p-0.5
-        "
-            >
+            <div className="h-48 w-19 rounded-sm border bg-muted/20 p-0.5 ">
               {["AM", "PM"].map((ap) => (
                 <button
                   key={ap}
@@ -153,14 +129,11 @@ export function Timer({
 
                     updateTime(hour, minute, ap as "AM" | "PM");
                   }}
-                  className={`
-              mb-0.5 h-8 w-full rounded-sm
-              text-sm font-medium transition-all cursor-pointer
-              ${
-                ampm === ap
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              }
+                  className={`mb-0.5 h-8 w-full rounded-sm text-sm font-medium transition-all cursor-pointer ${
+                    ampm === ap
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted"
+                  }
             `}
                 >
                   {ap}

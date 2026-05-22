@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { LeaveBalance } from "../leave";
 import { LeaveService } from "../leave.service";
 import { getLeaveTheme } from "../leave.constant";
-import { MoveRight } from "lucide-react";
+import { ArrowRight, MoveRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function getProgress(used: number, total: number) {
@@ -73,10 +73,12 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
 
           {isDashboard && (
             <Button
-              variant={"link"}
+              variant="link"
               onClick={() => router.push("/timehub/leaves")}
+              className="group flex items-center gap-1 p-0"
             >
-              View All Leaves →
+              View All Leaves
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 "/>
             </Button>
           )}
         </div>
@@ -199,7 +201,7 @@ export function LeaveBalanceCard({ variant = "grid" }: { variant?: Variant }) {
 
       {isDashboard && (
         <Button
-          className="w-full rounded-sm py-5 flex gap-2"
+          className="w-full rounded-sm  cursor-pointer py-5 flex gap-2"
           onClick={() => router.push("/timehub/leaves/apply")}
         >
           Apply Leave

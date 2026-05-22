@@ -229,7 +229,7 @@ export default function AttendancePage() {
           <div className="border rounded-xl p-4 flex flex-col gap-3">
             <Skeleton className="h-4 w-32" />
             <div className="flex gap-2">
-              <Skeleton className="h-10 w-10" /> 
+              <Skeleton className="h-10 w-10" />
               <Skeleton className="h-10 w-10" />
             </div>
           </div>
@@ -249,9 +249,8 @@ export default function AttendancePage() {
           <div className="border rounded-xl p-4 flex flex-col gap-3">
             <Skeleton className="h-4 w-36" />
             <div className="flex gap-3 items-center">
-
-            <Skeleton className="h-6 w-28" />
-            <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-6 w-28" />
+              <Skeleton className="h-4 w-20" />
             </div>
           </div>
         </div>
@@ -261,19 +260,20 @@ export default function AttendancePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-bold">Attendance</h1>
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center md:justify-between">
+        <h1 className="text-xl font-bold sm:text-2xl">Attendance</h1>
+
+        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
           <Button
             variant="outline"
             size="sm"
             className="rounded-sm"
             onClick={() => setCurrentMonth((prev) => subMonths(prev, 1))}
           >
-            <MoveLeft />
+            <MoveLeft className="h-4 w-4" />
           </Button>
 
-          <span className="text-sm font-medium w-28 text-center">
+          <span className="w-24 sm:w-28 text-center text-xs sm:text-sm font-medium">
             {format(currentMonth, "MMMM yyyy")}
           </span>
 
@@ -284,7 +284,7 @@ export default function AttendancePage() {
             onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
             disabled={endOfMonth(currentMonth) > new Date()}
           >
-            <MoveRight />
+            <MoveRight className="h-4 w-4" />
           </Button>
         </div>
       </div>

@@ -276,7 +276,7 @@ export default function CompOffForm() {
 
         <div className="col-span-6">
           <div
-            className="bg-muted border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
+            className="bg-muted/30 border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
             onClick={() => fileInputRef.current?.click()}
           >
             <CloudUpload className="text-primary" size={30} />
@@ -314,8 +314,7 @@ export default function CompOffForm() {
           </Button>
 
           <Button
-            type="button"
-            variant="secondary"
+            variant="outline"
             onClick={() => router.back()}
             className="min-h-10 rounded-sm px-5"
           >

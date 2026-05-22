@@ -2,128 +2,16 @@
 
 import { addDays, format, isSameDay, parseISO, startOfWeek } from "date-fns";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-const currentYear = new Date().getFullYear();
-
-export const holidayData = {
-  year: currentYear,
-  holidays: [
-    // NATIONAL
-    {
-      id: "new-year",
-      date: `${currentYear}-01-01`,
-      title: "New Year",
-      category: "National",
-    },
-    {
-      id: "republic-day",
-      date: `${currentYear}-01-26`,
-      title: "Republic Day",
-      category: "National",
-    },
-    {
-      id: "independence-day",
-      date: `${currentYear}-08-15`,
-      title: "Independence Day",
-      category: "National",
-    },
-    {
-      id: "gandhi-jayanti",
-      date: `${currentYear}-10-02`,
-      title: "Gandhi Jayanti",
-      category: "National",
-    },
-    {
-      id: "christmas",
-      date: `${currentYear}-12-25`,
-      title: "Christmas",
-      category: "National",
-    },
-
-    // OPTIONAL
-    {
-      id: "makar-sankranti",
-      date: `${currentYear}-01-14`,
-      title: "Makar Sankranti",
-      category: "Optional",
-    },
-    {
-      id: "maha-shivaratri",
-      date: `${currentYear}-02-26`,
-      title: "Maha Shivaratri",
-      category: "Optional",
-    },
-    {
-      id: "raksha-bandhan",
-      date: `${currentYear}-08-09`,
-      title: "Raksha Bandhan",
-      category: "Optional",
-    },
-    {
-      id: "janmashtami",
-      date: `${currentYear}-08-16`,
-      title: "Janmashtami",
-      category: "Optional",
-    },
-    {
-      id: "karwa-chauth",
-      date: `${currentYear}-10-10`,
-      title: "Karwa Chauth",
-      category: "Optional",
-    },
-
-    // OCCASIONAL
-    {
-      id: "holi",
-      date: `${currentYear}-03-14`,
-      title: "Holi",
-      category: "Occasional",
-    },
-    {
-      id: "ugadi",
-      date: `${currentYear}-03-30`,
-      title: "Ugadi",
-      category: "Occasional",
-    },
-    {
-      id: "ram-navami",
-      date: `${currentYear}-04-06`,
-      title: "Ram Navami",
-      category: "Occasional",
-    },
-    {
-      id: "eid",
-      date: `${currentYear}-03-31`,
-      title: "Eid-ul-Fitr",
-      category: "Occasional",
-    },
-    {
-      id: "ganesh-chaturthi",
-      date: `${currentYear}-08-27`,
-      title: "Ganesh Chaturthi",
-      category: "Occasional",
-    },
-    {
-      id: "dussehra",
-      date: `${currentYear}-10-01`,
-      title: "Dussehra",
-      category: "Occasional",
-    },
-    {
-      id: "diwali",
-      date: `${currentYear}-10-20`,
-      title: "Diwali",
-      category: "Occasional",
-    },
-  ],
-};
+import { Holiday } from "../holiday";
+import { HolidayService } from "../holiday.service";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const holidayPalette = [
   "status-info",
@@ -135,7 +23,7 @@ const holidayPalette = [
 
 const getHolidayColors = (
   holidays: Array<
-    (typeof holidayData.holidays)[number] & {
+    Holiday & {
       dateObj: Date;
     }
   >,
@@ -152,16 +40,36 @@ export function HolidaysCard() {
   const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState(today);
+  const [holidaysData, setHolidaysData] = useState<Holiday[]>([]);
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchHolidays();
+  }, []);
+
+  const fetchHolidays = async () => {
+    try {
+      setLoading(true);
+
+      const res = await HolidayService.getAll();
+
+      setHolidaysData(res);
+    } catch (error) {
+      console.error("Failed to fetch holidays:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const holidays = useMemo(
     () =>
-      holidayData.holidays
+      holidaysData
         .map((h) => ({
           ...h,
           dateObj: parseISO(h.date),
         }))
         .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()),
-    [],
+    [holidaysData],
   );
 
   const holidaysWithColors = getHolidayColors(holidays);
@@ -177,29 +85,23 @@ export function HolidaysCard() {
     length: 7,
   }).map((_, i) => addDays(weekStart, i));
 
-  // Always show max 2 holidays
   const visibleHolidays = useMemo(() => {
     const weekEnd = addDays(weekStart, 6);
 
-    // Holidays in current week
     const weekHolidays = holidaysWithColors.filter(
       (h) => h.dateObj >= weekStart && h.dateObj <= weekEnd,
     );
 
-    // If 2 holidays exist in week
     if (weekHolidays.length >= 2) {
       return weekHolidays.slice(0, 2);
     }
 
-    // Upcoming holidays after current week
     const futureHolidays = holidaysWithColors.filter(
       (h) => h.dateObj > weekEnd,
     );
 
-    // Merge current week + future
     const merged = [...weekHolidays, ...futureHolidays];
 
-    // Keep consistent layout
     return merged.slice(0, 2);
   }, [holidaysWithColors, weekStart]);
 
@@ -215,19 +117,18 @@ export function HolidaysCard() {
       "
     >
       <CardContent className="flex h-full flex-col">
-        {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-semibold">Upcoming Holidays</h2>
-
           <Button
-            variant={"link"}
+            variant="link"
             onClick={() => router.push("/timehub/holidays")}
+            className="group flex items-center gap-1 p-0"
           >
-            View All →
+            View All
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 " />
           </Button>
         </div>
 
-        {/* Calendar */}
         <div
           className="
             mb-4 rounded-xl
@@ -235,7 +136,6 @@ export function HolidaysCard() {
             bg-card p-4
           "
         >
-          {/* Month Nav */}
           <div className="mb-3 flex items-center justify-between">
             <Button
               size="icon"
@@ -257,25 +157,28 @@ export function HolidaysCard() {
             <Button
               size="icon"
               variant="outline"
-              className="h-8 w-8 rounded-full"
+              className="
+            h-8 w-8 rounded-full
+            border-border
+            bg-card
+            hover:bg-muted
+          "
               onClick={() => {
                 const newDate = addDays(selectedDate, 7);
 
                 setSelectedDate(newDate);
               }}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 text-foreground" />
             </Button>
           </div>
 
-          {/* Weekdays */}
           <div className="grid grid-cols-7 text-center text-[11px] text-muted-foreground">
             {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
               <div key={`${d}-${i}`}>{d}</div>
             ))}
           </div>
 
-          {/* Dates */}
           <div className="mt-2 grid grid-cols-7 text-center text-sm">
             {weekDays.map((date) => {
               const isToday = isSameDay(date, today);
@@ -292,11 +195,11 @@ export function HolidaysCard() {
                     rounded-full text-sm
                     transition-colors
 
-                    ${
-                      isToday
-                        ? "bg-primary text-primary-foreground"
-                        : "text-foreground"
-                    }
+                     ${
+                       isToday
+                         ? "bg-primary text-primary-foreground"
+                         : "text-foreground hover:bg-muted"
+                     }
 
                     ${holiday && !isToday ? "font-semibold text-primary" : ""}
                   `}
@@ -308,49 +211,68 @@ export function HolidaysCard() {
           </div>
         </div>
 
-        {/* Holiday List */}
         <div className="flex-1 space-y-3 overflow-auto pr-1">
-          {visibleHolidays.map((h) => {
-            const badgeColor = h.color;
+          {loading
+            ? Array.from({ length: 2 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="
+            flex items-center justify-between
+            rounded-md border
+            border-dashboard-border
+            bg-card px-3 py-2
+          "
+                >
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-7 w-7 rounded-md" />
 
-            return (
-              <div
-                key={h.id}
-                className="
+                    <Skeleton className="h-4 w-36" />
+                  </div>
+
+                  <Skeleton className="h-4 w-24" />
+                </div>
+              ))
+            : visibleHolidays.map((h) => {
+                const badgeColor = h.color;
+
+                return (
+                  <div
+                    key={h.id}
+                    className="
                   flex items-center justify-between
                   rounded-md border
                   border-dashboard-border
                   bg-card px-3 py-2
                 "
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`
                       flex h-7 w-7 items-center
                       justify-center rounded-md
                       text-xs font-semibold
                       ${badgeColor}
                     `}
-                  >
-                    {format(h.dateObj, "dd")}
-                  </div>
+                      >
+                        {format(h.dateObj, "dd")}
+                      </div>
 
-                  <span className="text-sm font-medium">
-                    {format(h.dateObj, "MMM dd")} {h.title}
-                  </span>
-                </div>
+                      <span className="text-sm font-medium">
+                        {format(h.dateObj, "MMM dd")} {h.title}
+                      </span>
+                    </div>
 
-                <span
-                  className="
+                    <span
+                      className="
                     text-xs font-medium
                     text-primary
                   "
-                >
-                  {h.category} Holiday
-                </span>
-              </div>
-            );
-          })}
+                    >
+                      {h.category} Holiday
+                    </span>
+                  </div>
+                );
+              })}
         </div>
       </CardContent>
     </Card>

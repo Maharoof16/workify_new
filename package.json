@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "^1.4.1",
     "@fontsource/manrope": "^5.2.8",
+    "@reduxjs/toolkit": "^2.12.0",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.16.1",
@@ -28,6 +29,7 @@
     "react-day-picker": "^10.0.0",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.75.0",
+    "react-redux": "^9.3.0",
     "react-resizable-panels": "^4.11.0",
     "recharts": "^3.8.0",
     "shadcn": "^4.7.0",

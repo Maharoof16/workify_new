@@ -26,7 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { holidayData } from "./holiday-card";
+import { Holiday } from "../holiday";
 
 const offDayConfig = {
   type: "WEEKLY",
@@ -36,17 +36,23 @@ const offDayConfig = {
 
 type CalendarCardProps = {
   currentMonth: Date;
-  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+
+  setCurrentMonth: React.Dispatch<
+    React.SetStateAction<Date>
+  >;
+
+  holidays: Holiday[];
+
+  loading?: boolean;
 };
 
 export function CalendarCard({
   currentMonth,
   setCurrentMonth,
+  holidays,
+  loading,
 }: CalendarCardProps) {
-  const holidays = (holidayData.holidays || []).map((h) => ({
-    ...h,
-    dateObj: parseISO(h.date),
-  }));
+
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [open, setOpen] = useState(false);
@@ -69,9 +75,15 @@ export function CalendarCard({
     }
     return offDayConfig.weeklyOffDays.includes(date.getDay());
   };
+const parsedHolidays = holidays.map((h) => ({
+  ...h,
 
-  const getHoliday = (date: Date) =>
-    holidays.filter((h) => isSameDay(h.dateObj, date));
+  dateObj: parseISO(h.date),
+}));
+ const getHoliday = (date: Date) =>
+  parsedHolidays.filter((h) =>
+    isSameDay(h.dateObj, date),
+  );
 
   const start = startOfWeek(startOfMonth(currentMonth));
   const end = endOfWeek(endOfMonth(currentMonth));
@@ -102,13 +114,13 @@ export function CalendarCard({
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
 
   return (
-    <div className=" flex flex-col gap-4 xl:col-span-7 rounded-xl border p-3 xl:p-6 border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+    <div className=" flex flex-col gap-4 xl:col-span-7 rounded-xl border p-2 xl:p-4 border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <h2 className="text-[18px] md:text-lg font-semibold text-center md:text-left">
           Holidays in {format(currentMonth, "MMMM yyyy")}
         </h2>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between md:justify-end gap-1">
           <Button
             variant="ghost"
             size="sm"
@@ -245,65 +257,72 @@ export function CalendarCard({
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 bg-border rounded-md overflow-hidden">
-        {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => (
-          <div key={d} className="px-2 py-1 border rounded-t-md">
-            {d}
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-7 grid-rows-6 gap-1 ">
-        {days.map((date, i) => {
-          const holidaysForDay = getHoliday(date);
-          const off = isOffDay(date);
-
-          return (
-            <div
-              key={i}
-              className={`group relative border rounded-md p-2 flex flex-col justify-between min-h-20
-                ${!isSameMonth(date, currentMonth) ? "bg-muted/30 text-muted-foreground/40" : ""}`}
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 hover:bg-none transition"
-                onClick={() => openCreateDialog(date)}
+      <div className="overflow-x-auto">
+        <div className="min-w-180 flex flex-col gap-1">
+          <div className="grid grid-cols-7 gap-1 overflow-hidden">
+            {["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map((d) => (
+              <div
+                key={d}
+                className="p-2 border rounded-sm text-xs bg-background"
               >
-                <Pencil className="text-muted-foreground h-2 w-2" />
-              </Button>
-              <span className="text-xs font-medium text-muted-foreground">
-                {format(date, "d")}
-              </span>
-
-              <div className="flex flex-col gap-1">
-                {off && (
-                  <div className="text-[12px] px-2 py-0.5 rounded w-full bg-muted text-muted-foreground">
-                    Off Day
-                  </div>
-                )}
-
-                {holidaysForDay.slice(0, 2).map((h) => (
-                  <div
-                    key={h.id}
-                    className={`text-[12px] px-2 py-0.5 rounded w-full truncate cursor-pointer ${getHolidayColor(
-                      h.id,
-                    )}`}
-                    onClick={() => handleEdit(h.id)}
-                  >
-                    {h.title}
-                  </div>
-                ))}
-
-                {holidaysForDay.length > 2 && (
-                  <span className="text-[9px] text-muted-foreground">
-                    +{holidaysForDay.length - 2} more
-                  </span>
-                )}
+                {d}
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+
+          <div className="grid grid-cols-7 grid-rows-6 gap-1">
+            {days.map((date, i) => {
+              const holidaysForDay = getHoliday(date);
+              const off = isOffDay(date);
+
+              return (
+                <div
+                  key={i}
+                  className={`group relative border bg-background rounded-md p-2 flex flex-col justify-between min-h-25
+                ${!isSameMonth(date, currentMonth) ? "bg-muted/30 text-muted-foreground/40" : ""}`}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-0 right-0 xl:top-1 xl:right-1 opacity-100 xl:opacity-0 group-hover:opacity-100 transition hover:bg-transparent focus:bg-transparent active:bg-transparent "
+                    onClick={() => openCreateDialog(date)}
+                  >
+                    <Pencil className="h-2 w-2 text-muted-foreground hover:text-blue-500 transition-colors" />
+                  </Button>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {format(date, "d")}
+                  </span>
+
+                  <div className="flex flex-col gap-1">
+                    {off && (
+                      <div className="text-[12px] px-2 py-0.5 rounded-[4px] w-full bg-muted text-muted-foreground">
+                        Off Day
+                      </div>
+                    )}
+
+                    {holidaysForDay.slice(0, 2).map((h) => (
+                      <div
+                        key={h.id}
+                        className={`text-[12px] px-2 py-0.5 rounded-[4px] w-full truncate cursor-pointer ${getHolidayColor(
+                          h.id,
+                        )}`}
+                        onClick={() => handleEdit(h.id)}
+                      >
+                        {h.title}
+                      </div>
+                    ))}
+
+                    {holidaysForDay.length > 2 && (
+                      <span className="text-[9px] text-muted-foreground">
+                        +{holidaysForDay.length - 2} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
       {/* <HolidayDialog
         open={open}

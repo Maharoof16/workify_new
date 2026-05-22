@@ -1,57 +1,159 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { format, isSameMonth, parseISO } from "date-fns";
+
+import {
+  format,
+  isSameMonth,
+  parseISO,
+} from "date-fns";
+
 import { useState } from "react";
-import { holidayData } from "./holiday-card";
+
+import {
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
+
+import { Holiday } from "../holiday";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 type HolidayListProps = {
   currentMonth: Date;
+
+  holidays: Holiday[];
+
+  loading?: boolean;
 };
 
-export function HolidayList({ currentMonth }: HolidayListProps) {
-  const [showAll, setShowAll] = useState(false);
-  const holidays = (holidayData.holidays || []).map((h) => ({
+export function HolidayList({
+  currentMonth,
+  holidays,
+  loading,
+}: HolidayListProps) {
+  const [showAll, setShowAll] =
+    useState(false);
+
+  const parsedHolidays = holidays.map((h) => ({
     ...h,
+
     dateObj: parseISO(h.date),
   }));
 
-  const holidaysThisMonth = holidays.filter((h) =>
-    isSameMonth(h.dateObj, currentMonth),
-  );
+  const holidaysThisMonth =
+    parsedHolidays.filter((h) =>
+      isSameMonth(
+        h.dateObj,
+        currentMonth,
+      ),
+    );
 
-  const currentYear = currentMonth.getFullYear();
+  const currentYear =
+    currentMonth.getFullYear();
 
-  const holidaysThisYear = holidays.filter(
-    (h) => h.dateObj.getFullYear() === currentYear,
-  );
+  const holidaysThisYear =
+    parsedHolidays.filter(
+      (h) =>
+        h.dateObj.getFullYear() ===
+        currentYear,
+    );
 
-  const data = showAll ? holidaysThisYear : holidaysThisMonth;
+  const data = showAll
+    ? holidaysThisYear
+    : holidaysThisMonth;
 
   return (
-    <div className="border rounded-xl bg-card p-4 flex flex-col gap-3">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-medium">List of Holidays</h2>
+    <div
+      className="
+        flex flex-col gap-2
+        xl:col-span-7
+        rounded-xl border
+        p-3 xl:p-4
+        border-dashboard-border
+        bg-linear-to-b
+        from-dashboard-card-from
+        to-dashboard-card-to
+      "
+    >
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">
+          List of Holidays
+        </h2>
+
         <Button
-          variant={"link"}
-          className="text-xs text-blue-600"
-          onClick={() => setShowAll((prev) => !prev)}
+          variant="link"
+          className="
+            flex items-center gap-1
+            text-xs text-blue-600
+          "
+          onClick={() =>
+            setShowAll((prev) => !prev)
+          }
         >
-          {showAll ? " ← View Less " : "View All →"}
+          {showAll ? (
+            <>
+              <ArrowLeft className="h-3 w-3" />
+              View Less
+            </>
+          ) : (
+            <>
+              View All
+              <ArrowRight className="h-3 w-3" />
+            </>
+          )}
         </Button>
       </div>
 
-      {data.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No holidays this month</p>
+      {loading ? (
+        Array.from({ length: 6 }).map(
+          (_, i) => (
+            <div
+              key={i}
+              className="
+                flex items-center
+                justify-between
+                rounded-md border
+                px-3 py-3
+              "
+            >
+              <Skeleton className="h-4 w-32" />
+
+              <Skeleton className="h-4 w-20" />
+            </div>
+          ),
+        )
+      ) : data.length === 0 ? (
+        <p
+          className="
+            text-xs
+            text-muted-foreground
+          "
+        >
+          No holidays this month
+        </p>
       ) : (
         data.map((h) => (
           <div
             key={h.id}
-            className="border rounded-md px-3 py-2 flex justify-between text-sm"
+            className="
+              flex justify-between
+              rounded-md border
+              px-3 py-2 text-sm
+            "
           >
             <span>{h.title}</span>
-            <span className="text-xs text-muted-foreground">
-              {format(h.dateObj, "MMMM d")}
+
+            <span
+              className="
+                bg-background
+                text-xs font-medium
+              "
+            >
+              {format(
+                h.dateObj,
+                "MMMM d",
+              )}
             </span>
           </div>
         ))

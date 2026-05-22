@@ -41,14 +41,9 @@ const suggestions = [
 
 export function SuggestionsCard() {
   return (
-    <div
-      className="rounded-xl border border-dashboard-border
-      bg-linear-to-b
-      from-dashboard-card-from
-      to-dashboard-card-to"
-    >
-      <CardContent className="px-4 py-3 flex flex-col gap-2">
-          <h3 className="text-base font-semibold py-2">
+    <div className="rounded-xl border border-dashboard-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to">
+      <CardContent className="p-4 flex flex-col gap-2">
+        <h3 className="py-2 text-base font-semibold text-foreground">
           Suggestions
         </h3>
 
@@ -59,9 +54,9 @@ export function SuggestionsCard() {
             return (
               <div
                 key={i}
-                className={`rounded-md border border-[#E5EDF5] p-4 min-h-[180px] flex flex-col justify-between ${item.cardBg}`}
+                className={`rounded-md border border-border bg-card p-4 min-h-44 flex flex-col justify-between ${item.cardBg}`}
               >
-                <div className="flex gap-4">
+                <div className="flex gap-5">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-full ${item.iconBg}`}
                   >
@@ -69,18 +64,18 @@ export function SuggestionsCard() {
                   </div>
 
                   <div>
-                    <h3 className="text-[15px] font-semibold text-[#001E4B]">
+                    <h3 className="text-[15px] font-semibold text-foreground">
                       {item.title}
                     </h3>
 
-                    <p className="max-w-[260px] text-xs text-[#6B7280]">
+                    <p className="max-w-[260px] text-xs text-muted-foreground">
                       {item.description}
                     </p>
                   </div>
                 </div>
 
                 <button
-                  className={`cursor-pointer flex items-center gap-2 text-sm font-medium ${item.buttonColor}`}
+                  className={`group cursor-pointer flex items-center gap-2 text-sm font-medium transition-all ${item.buttonColor}`}
                 >
                   {item.action}
                   <ArrowRight className="h-4 w-4" />

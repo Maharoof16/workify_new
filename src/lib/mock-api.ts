@@ -1,6 +1,6 @@
 export const mockApi = async <T>(
   data: T,
-  delay = 500,
+  delay = 1500,
 ): Promise<{
   data: {
     data: T;

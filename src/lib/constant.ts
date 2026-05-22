@@ -48,6 +48,7 @@ export const icon_list = [
   "Edit",
   "Trash2",
   "Copy",
+  "StickyNote",
   "Paperclip",
   "Link2",
   "Move",
