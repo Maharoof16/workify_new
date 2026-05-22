@@ -8,11 +8,10 @@ import { DashboardService } from "../dashboard.service";
 import { ActionItems } from "../dashboard";
 import { actions } from "../dashboard.mock";
 
-
 export function ActionItemsCard() {
   //  const [actions, setActions] = useState<ActionItems[]>([]);
   //   const [loading, setLoading] = useState(true);
-  
+
   //   useEffect(() => {
   //     fetchActionItems();
   //   }, []);
@@ -51,10 +50,8 @@ export function ActionItemsCard() {
         rounded-xl
       "
     >
-      <CardContent className="p-4 flex flex-col gap-4">
-        <h2 className="text-lg font-semibold text-[#001E4B]">
-          My Action Items
-        </h2>
+      <CardContent className="p-4 flex flex-col gap-3">
+        <h3 className="text-base font-semibold py-2">My Action Items</h3>
 
         <div className="flex items-stretch gap-3">
           {canGoPrev && (
@@ -62,8 +59,7 @@ export function ActionItemsCard() {
               className="
                 hidden lg:flex
                 w-12 shrink-0
-                border border-white/60
-                bg-white/80
+                bg-card/80
                 rounded-2xl
               "
             >
@@ -74,7 +70,7 @@ export function ActionItemsCard() {
                   p-0 cursor-pointer
                 "
               >
-                <ChevronLeft className="h-5 w-5 text-slate-500" />
+                <ChevronLeft className="h-5 w-5 text-muted-foreground" />
               </CardContent>
             </Card>
           )}
@@ -83,13 +79,18 @@ export function ActionItemsCard() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:flex flex-1 gap-3">
             {visibleActions.map((item, i) => (
               <Card
-                key={i}
+                key={`${startIndex}-${i}`}
                 className="
                   flex-1
-                  border border-white/60
-                  bg-white/80
                   rounded-md
+                  animate-in
+                  slide-in-from-right-5
+                  fade-in
+                  duration-500
                 "
+                style={{
+                  animationDelay: `${i * 100}ms`,
+                }}
               >
                 <CardContent
                   className="
@@ -107,11 +108,11 @@ export function ActionItemsCard() {
                   />
 
                   <div>
-                    <p className="text-sm font-semibold text-[#1e293b]">
+                    <p className="text-sm font-semibold text-foreground">
                       {item.title}
                     </p>
 
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {item.subtitle}
                     </p>
                   </div>
@@ -125,8 +126,9 @@ export function ActionItemsCard() {
               className="
                 hidden lg:flex
                 w-12 shrink-0
-                border border-white/60
-                bg-white/80
+              
+        bg-card/80
+
                 rounded-2xl
               "
             >
@@ -139,7 +141,6 @@ export function ActionItemsCard() {
                 className="
                   flex h-full items-center justify-center
                   p-0 cursor-pointer
-                  hover:bg-white transition-all
                 "
               >
                 <ChevronRight className="h-5 w-5 text-slate-500" />

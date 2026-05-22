@@ -19,6 +19,12 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import {
   Sidebar,
@@ -95,12 +101,34 @@ const sidebarItems = [
 
 export default function AppSidebar() {
   const pathname = usePathname();
-
+  const [collapsed, setCollapsed] = React.useState(false);
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const el = document.querySelector("[data-collapsible]");
+
+    if (!el) return;
+
+    const update = () => {
+      setCollapsed(el.getAttribute("data-collapsible") === "icon");
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleMenu = (title: string) => {
     setOpenMenu((prev) => (prev === title ? null : title));
   };
+
+  const isActive = (item: any) =>
+    item.children
+      ? item.children.some((c: any) => pathname.startsWith(c.href))
+      : pathname.startsWith(item.href);
 
   React.useEffect(() => {
     const activeParent = sidebarItems.find(
@@ -116,133 +144,167 @@ export default function AppSidebar() {
     }
   }, [pathname]);
 
+  const maybeTooltip = (title: string, children: React.ReactNode) => {
+    if (!collapsed) return children;
+
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipContent side="right">{title}</TooltipContent>
+      </Tooltip>
+    );
+  };
+
   return (
-    <Sidebar
-      collapsible="icon"
-      className="
+    <TooltipProvider delayDuration={0}>
+      <Sidebar
+        collapsible="icon"
+        className="
         border-r border-sidebar-border
         bg-background
         *:data-[sidebar=rail]:hidden
       "
-    >
-      {/* HEADER */}
-      <SidebarHeader
-        className="
+      >
+        <SidebarHeader
+          className="
           px-3 py-3
           group-data-[collapsible=icon]:px-0
         "
-      >
-        <div
-          className="
+        >
+          <div
+            className="
             flex items-center justify-between
             group-data-[collapsible=icon]:justify-center
           "
-        >
-          <Image
-            priority
-            unoptimized
-            src="/logo.png"
-            alt="Workify Logo"
-            width={140}
-            height={40}
-            className="
-              h-14 w-auto object-contain
-              group-data-[collapsible=icon]:hidden
-            "
-          />
-
-          {/* NORMAL TRIGGER */}
-         <SidebarTrigger
-  className="
-    hidden md:flex
-
-    h-8 w-8 shrink-0
-    group-data-[collapsible=icon]:hidden
-
-    bg-transparent
-    hover:bg-transparent
-    shadow-none
-  "
-/>
-
-          {/* COLLAPSED MINI LOGO */}
-          <div
-  className="
-    relative
-    hidden
-
-    md:group-data-[collapsible=icon]:flex
-
-    h-10 w-10 shrink-0
-    items-center justify-center
-    overflow-hidden
-    group/logo
-  "
->
-            {/* MINI LOGO */}
+          >
             <Image
               priority
               unoptimized
-              src="/icon-mini.png"
-              alt="Mini Logo"
-              width={28}
-              height={28}
+              src="/logo.png"
+              alt="Workify Logo"
+              width={140}
+              height={40}
               className="
-  absolute
-  transition-all duration-200
-
-  group-hover/logo:opacity-0
-  group-hover/logo:scale-75
-"
+              h-14 w-auto object-contain
+              group-data-[collapsible=icon]:hidden
+            "
             />
+            <SidebarTrigger
+              className="
+              hidden md:flex
 
-            {/* SIDEBAR TRIGGER */}
-          <SidebarTrigger
-  className="
-    hidden md:flex
+              h-8 w-8 shrink-0
+              group-data-[collapsible=icon]:hidden
 
-    absolute left-1/2 top-1/2
-    -translate-x-1/2 -translate-y-1/2
+              bg-transparent
+              hover:bg-transparent
+              shadow-none
+            "
+            />
+            <div
+              className="
+            relative
+            hidden
 
-    h-8 w-8 min-w-8 p-0
+            md:group-data-[collapsible=icon]:flex
 
-    items-center justify-center
+            h-10 w-10 shrink-0
+            items-center justify-center
+            overflow-hidden
+            group/logo
+          "
+            >
+              <Image
+                priority
+                unoptimized
+                src="/icon-mini.png"
+                alt="Mini Logo"
+                width={28}
+                height={28}
+                className="
+                absolute
+                transition-all duration-200
 
-    opacity-0 scale-75
-    transition-all duration-200
+                group-hover/logo:opacity-0
+                group-hover/logo:scale-75
+              "
+              />
 
-    group-hover/logo:opacity-100
-    group-hover/logo:scale-100
+              {/* SIDEBAR TRIGGER */}
+              <SidebarTrigger
+                className="
+              hidden md:flex
 
-    bg-transparent!
-    hover:bg-transparent!
-    shadow-none
-  "
-/>
+              absolute left-1/2 top-1/2
+              -translate-x-1/2 -translate-y-1/2
+
+              h-8 w-8 min-w-8 p-0
+
+              items-center justify-center
+
+              opacity-0 scale-75
+              transition-all duration-200
+
+              group-hover/logo:opacity-100
+              group-hover/logo:scale-100
+
+              bg-transparent!
+              hover:bg-transparent!
+              shadow-none
+            "
+              />
+            </div>
           </div>
-        </div>
-      </SidebarHeader>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu className="space-y-1">
+                {sidebarItems.map((item) => {
+                  const hasChildren = !!item.children;
 
-      {/* CONTENT */}
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {sidebarItems.map((item) => {
-                const isActive = item.children
-                  ? item.children.some((child) =>
-                      pathname.startsWith(child.href),
-                    )
-                  : pathname === item.href ||
-                    pathname.startsWith(`${item.href}/`);
+                  const isActive = hasChildren
+                    ? item.children!.some((child) =>
+                        pathname.startsWith(child.href),
+                      )
+                    : pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`);
 
-                const hasChildren = !!item.children;
-
-                // =========================
-                // GROUP WITH CHILDREN
-                // =========================
-                if (hasChildren) {
                   const isOpen = openMenu === item.title;
+
+                  if (!hasChildren) {
+                    const link = (
+                      <Link
+                        href={item.href}
+                        className={`
+                        flex h-11 items-center gap-2 rounded-sm px-2 transition-colors
+                        ${
+                          isActive
+                            ? "bg-sidebar-accent text-primary"
+                            : "text-foreground hover:bg-sidebar-accent/60"
+                        }
+
+                        group-data-[collapsible=icon]:mx-auto
+                        group-data-[collapsible=icon]:w-9
+                        group-data-[collapsible=icon]:h-9
+                        group-data-[collapsible=icon]:rounded-full
+                        group-data-[collapsible=icon]:justify-center
+                        group-data-[collapsible=icon]:px-0
+                      `}
+                      >
+                        <item.icon className="h-4 w-4" />
+
+                        <span className="group-data-[collapsible=icon]:hidden">
+                          {item.title}
+                        </span>
+                      </Link>
+                    );
+                    return (
+                      <SidebarMenuItem key={item.title}>
+                        {maybeTooltip(item.title, link)}
+                      </SidebarMenuItem>
+                    );
+                  }
 
                   return (
                     <Collapsible key={item.title} open={isOpen}>
@@ -250,65 +312,56 @@ export default function AppSidebar() {
                         {/* Parent */}
                         <div
                           className={`
-                            flex h-11 w-full items-center rounded-md
-                            px-2 text-[15px] font-medium
-                            transition-colors
+                          flex h-11 items-center rounded-sm px-2 transition-colors
+                          ${
+                            isActive
+                              ? "bg-sidebar-accent text-primary group-data-[collapsible=icon]:rounded-full"
+                              : "text-foreground hover:bg-sidebar-accent/60"
+                          }
 
-                            ${
-                              isActive
-                                ? "bg-sidebar-accent text-primary"
-                                : "text-foreground hover:bg-sidebar-accent/60"
-                            }
-
-                            group-data-[collapsible=icon]:justify-center
-                            group-data-[collapsible=icon]:px-0
-                          `}
+                          group-data-[collapsible=icon]:mx-auto
+                          group-data-[collapsible=icon]:w-9
+                          group-data-[collapsible=icon]:h-9
+                          group-data-[collapsible=icon]:rounded-full
+                          group-data-[collapsible=icon]:justify-center
+                          group-data-[collapsible=icon]:px-0
+                        `}
                         >
-                          {/* Parent Route */}
                           <button
                             type="button"
                             onClick={() => toggleMenu(item.title)}
                             className="
-    flex flex-1 items-center gap-2
-    overflow-hidden text-left
-
-    group-data-[collapsible=icon]:w-full
-    group-data-[collapsible=icon]:justify-center
-  "
+                            flex flex-1 items-center gap-2
+                            overflow-hidden
+                            group-data-[collapsible=icon]:justify-center
+                          "
                           >
-                            <item.icon
-                              className="
-                                h-4 w-4 shrink-0
-                                group-data-[collapsible=icon]:mx-auto
-                              "
-                            />
+                            <item.icon className="h-4 w-4 shrink-0" />
 
                             <span className="group-data-[collapsible=icon]:hidden">
                               {item.title}
                             </span>
                           </button>
 
-                          {/* Expand Toggle */}
+                          {/* toggle */}
                           <div
                             role="button"
                             tabIndex={0}
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-
                               toggleMenu(item.title);
                             }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
-
                                 toggleMenu(item.title);
                               }
                             }}
                             className="
-                              flex h-full items-center justify-center
-                              px-3 cursor-pointer
-                              group-data-[collapsible=icon]:hidden
+                            flex h-full items-center justify-center
+                            px-3 cursor-pointer
+                            group-data-[collapsible=icon]:hidden
                             "
                           >
                             {isOpen ? (
@@ -322,32 +375,30 @@ export default function AppSidebar() {
                         {/* Expanded Menu */}
                         <CollapsibleContent
                           className="
-                            mt-1 rounded-md
-                            bg-sidebar-accent p-2
+                            mt-1 rounded-md bg-sidebar-accent p-2
                             group-data-[collapsible=icon]:hidden
                           "
                         >
                           <div className="space-y-1">
-                            {item.children.map((subItem) => {
-                              const isSubActive = pathname === subItem.href;
+                            {item.children.map((sub) => {
+                              const subActive = pathname === sub.href;
 
                               return (
                                 <Link
-                                  key={subItem.href}
-                                  href={subItem.href}
+                                  key={sub.href}
+                                  href={sub.href}
                                   className={`
-                                      flex items-center rounded-md
-                                      px-3 py-2 text-sm
-                                      transition-all
+                                  flex items-center rounded-sm px-3 py-2 text-sm
+                                  transition-colors
 
-                                      ${
-                                        isSubActive
-                                          ? "bg-background text-primary font-medium"
-                                          : "text-foreground hover:bg-background/60"
-                                      }
-                                    `}
+                                  ${
+                                    subActive
+                                      ? "bg-background text-primary font-medium"
+                                      : "text-foreground hover:bg-background/60"
+                                  }
+                                `}
                                 >
-                                  {subItem.title}
+                                  {sub.title}
                                 </Link>
                               );
                             })}
@@ -355,95 +406,44 @@ export default function AppSidebar() {
                         </CollapsibleContent>
 
                         {/* Collapsed Icons */}
-                        <div
-                          className={`
-                            hidden
-                            mt-2 flex-col items-center gap-2
+                        <div className="hidden group-data-[collapsible=icon]:grid grid-cols-1 gap-2 mt-2">
+                          {item.children.map((sub) => {
+                            const subActive = pathname === sub.href;
 
-                            ${
-                              isOpen
-                                ? "group-data-[collapsible=icon]:flex"
-                                : "group-data-[collapsible=icon]:hidden"
-                            }
-                          `}
-                        >
-                          {item.children.map((subItem) => {
-                            const isSubActive = pathname === subItem.href;
+                            const icon = (
+                              <Link
+                                href={sub.href}
+                                className={`
+                    flex h-9 w-9 items-center justify-center rounded-full
+                    transition-colors
+
+                    ${
+                      subActive
+                        ? "bg-sidebar-accent text-primary"
+                        : "text-muted-foreground hover:bg-sidebar-accent/60"
+                    }
+                  `}
+                              >
+                                <sub.icon className="h-4 w-4" />
+                              </Link>
+                            );
 
                             return (
-                              <Link
-                                key={subItem.href}
-                                href={subItem.href}
-                                className={`
-                                    flex h-10 w-10 items-center
-                                    justify-center rounded-xl
-                                    transition-all
-
-                                    ${
-                                      isSubActive
-                                        ? "bg-sidebar-accent text-primary"
-                                        : "text-muted-foreground hover:bg-sidebar-accent/60"
-                                    }
-                                  `}
-                              >
-                                <subItem.icon className="h-4 w-4" />
-                              </Link>
+                              <div key={sub.href}>
+                                {maybeTooltip(sub.title, icon)}
+                              </div>
                             );
                           })}
                         </div>
                       </SidebarMenuItem>
                     </Collapsible>
                   );
-                }
-
-                // =========================
-                // NORMAL MENU
-                // =========================
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      className="
-                        group-data-[collapsible=icon]:justify-center
-                        group-data-[collapsible=icon]:px-0
-                      "
-                    >
-                      <Link
-                        href={item.href}
-                        className={`
-                          flex h-11 w-full items-center rounded-md
-                          px-2 text-[15px] font-medium
-                          transition-colors
-
-                          ${
-                            isActive
-                              ? "bg-sidebar-accent text-primary"
-                              : "text-foreground hover:bg-sidebar-accent/60"
-                          }
-
-                          group-data-[collapsible=icon]:justify-center
-                          group-data-[collapsible=icon]:px-0
-                        `}
-                      >
-                        <item.icon
-                          className="
-                            h-4 w-4 shrink-0
-                            group-data-[collapsible=icon]:mx-auto
-                          "
-                        />
-
-                        <span className="flex-1 group-data-[collapsible=icon]:hidden">
-                          {item.title}
-                        </span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    </TooltipProvider>
   );
 }

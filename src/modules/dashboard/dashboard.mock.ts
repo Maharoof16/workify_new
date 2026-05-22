@@ -104,6 +104,16 @@ export const actions: ActionItems[] = [
     subtitle: "Submit HR Request",
     imageUrl: NewRequest,
   },
+   {
+    title: "Time sheets",
+    subtitle: "Update Timesheets",
+    imageUrl: TimeSheet,
+  },
+  {
+    title: "Projects",
+    subtitle: "See all the projects",
+    imageUrl: Projects,
+  },
   
 ];
 

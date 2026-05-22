@@ -15,18 +15,18 @@ export function EmployeeFeedCard({
   loading = false,
 }: EmployeeFeedProps) {
   return (
-    <div className="w-full rounded-xl border border-border bg-linear-to-b from-[#F6FAFE] to-white p-4">
-      <h2 className="text-lg font-semibold text-text mb-4">Employee Feed</h2>
+    <div className="w-full rounded-xl border border-border bg-linear-to-b from-dashboard-card-from to-dashboard-card-to p-4">
+      <h3 className="text-base font-semibold py-2">Employee Feed</h3>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {loading
           ? Array.from({ length: 2 }).map((_, i) => (
               <div
                 key={i}
                 className="
-            flex flex-col sm:flex-row gap-3
+            flex flex-col md:flex-row gap-3
             rounded-md border border-border
-            bg-surface px-2 py-5
+            bg-card px-2 py-5
           "
               >
                 <Skeleton
@@ -55,9 +55,9 @@ export function EmployeeFeedCard({
           : data.map((item, i) => (
               <div
                 key={i}
-                className="flex flex-col sm:flex-row gap-3 rounded-md border border-border bg-surface px-2 py-5 hover:shadow-sm transition"
+                className="flex flex-col gap-3 rounded-md border border-border bg-card px-2 py-5 md:flex-row"
               >
-                <div className="relative h-20 w-full sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-md">
+                <div className="relative h-20 w-full md:h-16 md:w-28 shrink-0 overflow-hidden rounded-md">
                   <Image
                     src={item.imageUrl}
                     alt={item.title}
@@ -67,7 +67,7 @@ export function EmployeeFeedCard({
 
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-sm font-semibold text-text">
+                    <h3 className="text-sm font-semibold text-foreground">
                       {item.title}
                     </h3>
 
@@ -78,12 +78,12 @@ export function EmployeeFeedCard({
                     )}
                   </div>
 
-                  <p className="text-xs text-textMuted xl:max-w-8/12">
+                  <p className="text-xs text-muted-foreground xl:max-w-8/12">
                     {item.description}
                   </p>
                 </div>
 
-                <span className="text-xs text-textMuted whitespace-nowrap">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
                   {getTimeAgo(item.createdAt)}
                 </span>
               </div>

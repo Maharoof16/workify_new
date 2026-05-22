@@ -32,7 +32,7 @@ export default function PerformanceDevelopment({
             {Array.from({ length: 2 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-md border border-[#E2EAF3] bg-white/70 p-3 space-y-5"
+                className="rounded-md border border-border bg-card  p-3 space-y-5"
               >
                 <div className="flex items-center gap-3">
                   <Skeleton className="h-11 w-11 rounded-full" />
@@ -64,10 +64,19 @@ export default function PerformanceDevelopment({
               return (
                 <div
                   key={index}
-                  className="flex flex-col gap-3 rounded-md border border-[#E2EAF3] bg-white/70 backdrop-blur-sm p-3"
+                  className=" flex flex-col gap-3 rounded-md
+          border border-border
+          bg-card/70
+          backdrop-blur-sm
+          p-3"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="relative h-11 w-11 overflow-hidden rounded-full bg-[#EAF6FF]">
+                    <div
+                      className="
+              relative h-11 w-11 overflow-hidden rounded-full
+              bg-info
+            "
+                    >
                       <Image
                         src={card.imageUrl}
                         alt={card.title}
@@ -77,11 +86,13 @@ export default function PerformanceDevelopment({
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="text-[16px] font-semibold text-[#16315C]">
+                      <h3 className="text-[16px] font-semibold text-foreground">
                         {card.title}
                       </h3>
 
-                      <p className="text-xs text-[#7D8CA1]">{completed}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {completed}
+                      </p>
                     </div>
                   </div>
 
@@ -93,7 +104,7 @@ export default function PerformanceDevelopment({
                           className={`h-2 flex-1 rounded-sm ${
                             index < card.completedModules
                               ? "bg-linear-to-b from-[#47BD47] to-[#08A749]"
-                              : "bg-[#E8F0F8]"
+                              : "bg-muted"
                           }`}
                         />
                       ),
@@ -104,11 +115,11 @@ export default function PerformanceDevelopment({
                     {card.items.slice(0, 2).map((item, idx) => (
                       <div key={idx}>
                         <div className="flex items-center justify-between">
-                          <p className="text-[15px] text-[#2E3C54]">
+                          <p className="text-[15px] text-foreground">
                             {item.title}
                           </p>
 
-                          <span className="text-[14px] text-[#98A4B5]">
+                          <span className="text-[14px] text-muted-foreground">
                             {item.status === "NOT_STARTED"
                               ? "Not Started"
                               : item.status === "IN_PROGRESS"
@@ -118,7 +129,7 @@ export default function PerformanceDevelopment({
                         </div>
 
                         {idx !== card.items.length - 1 && (
-                          <div className="py-1 border-b border-[#EEF2F6]" />
+                          <div className="py-1 border-b border-border" />
                         )}
                       </div>
                     ))}
@@ -127,7 +138,7 @@ export default function PerformanceDevelopment({
                   <div className="flex justify-center">
                     <Button
                       variant="outline"
-                      className="h-8 rounded-sm border border-[#D9E5F2] bg-[#F6FAFE] px-5 py-4 text-xs font-medium text-[#1683E2] hover:bg-[#EEF6FF]"
+                      className=" h-8 rounded-sm border border-border bg-secondary px-5 py-4 text-xs font-medium text-info hover:bg-info hover:text-info-foreground transition-all"
                     >
                       View Goals
                     </Button>

@@ -79,23 +79,29 @@ export default function GreetingBanner() {
     },
   ];
   const actionBtn =
-    "flex items-center gap-2 rounded-full bg-[#EAF6FF]/70 backdrop-blur-md hover:bg-[#DCEFFF] text-[#1482DD] border border-[#B9E0FF] shadow-[0_6px_20px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.05)] px-3 py-1 text-xs sm:text-sm transition-all duration-300";
+    "flex items-center gap-2 rounded-full " +
+    "bg-[var(--banner-button-bg)] " +
+    "hover:bg-[var(--banner-button-hover)] " +
+    "text-[var(--banner-button-text)] " +
+    "border border-[var(--banner-card-border)] " +
+    "shadow-sm px-3 py-1 text-xs sm:text-sm transition-all duration-300";
+
   return (
-    <Card className="w-full rounded-xl bg-linear-to-r from-accent to-secondary px-4 md:px-6 relative overflow-hidden">
+    <Card className="relative overflow-hidden rounded-xl border-[var(--banner-card-border)] bg-linear-to-r from-[var(--banner-from)] to-[var(--banner-to)] px-4 md:px-6">
       <div className="relative z-10 grid grid-cols-12 gap-4 items-center">
         <div className="col-span-12 lg:col-span-5 space-y-8">
           <div>
-            <p className="text-[18px] font-medium text-foreground">
+            <p className="text-[18px] font-medium text-[var(--banner-text)]">
               {greeting}!
             </p>
 
-            <h1 className="text-xl sm:text-3xl font-semibold text-primary">
+            <h1 className="text-xl md:text-3xl font-semibold text-primary">
               Maharoof Kakkidiparambil
             </h1>
           </div>
 
-          <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
-            <p className="mb-3 font-medium text-sm sm:text-base">
+          <div className="bg-background/20 border-2 border-[var(--banner-card-border)] backdrop-blur-lg rounded-lg p-3 w-full">
+            <p className="mb-3 font-medium text-sm md:text-[16px]">
               Ready to make today impactful?
             </p>
 
@@ -129,7 +135,14 @@ export default function GreetingBanner() {
             </div>
 
             <div className="flex md:flex-col gap-2">
-              <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
+              <div
+                className="
+    rounded-lg p-3 w-full
+    border-2 border-[var(--banner-card-border)]
+    bg-[var(--banner-card-bg)]
+    backdrop-blur-lg
+  "
+              >
                 <div className="flex items-center gap-4">
                   <Image
                     src={weatherIcon}
@@ -138,17 +151,24 @@ export default function GreetingBanner() {
                   />
 
                   <div>
-                    <span className="text-regular">
+                    <span className="font-medium text-[var(--banner-text)]">
                       {temp !== null ? `${temp}°C` : "--"}
                     </span>
 
-                    <p className="text-xs text-muted-foreground">{location}</p>
+                    <p className="text-xs text-[var(--banner-muted)]">
+                      {location}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-background/20 dark:bg-background/5 border-2 border-white/80 backdrop-blur-lg rounded-lg p-3 w-full">
-                <div className="flex items-center gap-4">
+              <div    className="
+    rounded-lg p-3 w-full
+    border-2 border-[var(--banner-card-border)]
+    bg-[var(--banner-card-bg)]
+    backdrop-blur-lg
+  ">
+                    <div className="flex items-center gap-4">
                   <Image
                     src={timehubIcon}
                     alt="time"
@@ -156,9 +176,9 @@ export default function GreetingBanner() {
                   />
 
                   <div>
-                    <span className="text-regular">8h 12m</span>
+                    <span className="font-medium text-[var(--banner-text)]">8h 12m</span>
 
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-[var(--banner-muted)]">
                       Worked Today
                     </p>
                   </div>

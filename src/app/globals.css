@@ -148,6 +148,25 @@
   --neutral: #fef3c7;
   --neutral-foreground: #92400e;
   --table-header-bg: oklch(0.98 0.015 240);
+
+  --banner-from: color-mix(in srgb, var(--primary) 18%, white);
+  --banner-to: color-mix(in srgb, var(--secondary) 85%, white);
+
+  --banner-title: var(--primary);
+  --banner-text: #0f172a;
+  --banner-muted: #475569;
+
+  --banner-card-bg: rgba(255, 255, 255, 0.42);
+  --banner-card-border: rgba(255, 255, 255, 0.8);
+
+  --banner-button-bg: rgba(255, 255, 255, 0.72);
+  --banner-button-hover: rgba(255, 255, 255, 0.95);
+
+  --banner-button-text: var(--primary);
+
+  /* --banner-shadow:
+  0 10px 40px rgba(15, 23, 42, 0.08),
+  0 4px 14px rgba(15, 23, 42, 0.05); */
 }
 
 .dark {
@@ -166,8 +185,8 @@
   --secondary: oklch(24.634% 0.09134 258.044);
   --secondary-foreground: oklch(97% 0.003 255);
 
-  --muted: oklch(92.876% 0.01272 255.643);
-  --muted-foreground: oklch(75% 0.01 255);
+  --muted: oklch(0.2972 0 0);
+  --muted-foreground: oklch(0.7058 0 0);
 
   --accent: oklch(30% 0.03 250);
   --accent-foreground: oklch(97% 0.003 255);
@@ -212,7 +231,26 @@
   --neutral: rgb(120 53 15 / 0.25);
   --neutral-foreground: #facc15;
 
-  --table-header-bg: oklch(0.92 0.015 240);
+  --table-header-bg: rgba(255, 255, 255, 0.05);
+
+  --banner-from: color-mix(in srgb, var(--primary) 22%, #0f172a);
+  --banner-to: #111827;
+
+  --banner-title: #ffffff;
+  --banner-text: rgba(255, 255, 255, 0.95);
+  --banner-muted: rgba(255, 255, 255, 0.72);
+
+  --banner-card-bg: rgba(255, 255, 255, 0.05);
+  --banner-card-border: rgba(255, 255, 255, 0.2);
+
+  --banner-button-bg: rgba(255, 255, 255, 0.08);
+  --banner-button-hover: rgba(255, 255, 255, 0.14);
+
+  --banner-button-text: #ffffff;
+
+  /* --banner-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.45),
+    0 8px 24px rgba(0, 0, 0, 0.25); */
 }
 
 @layer base {
@@ -240,6 +278,10 @@
 
   .status-info {
     @apply bg-info text-info-foreground;
+  }
+
+  .status-primary {
+    @apply bg-primary text-primary-foreground;
   }
 
   .status-danger {
@@ -289,6 +331,10 @@
   .bg-neutral {
     @apply bg-neutral;
   }
+
+  /* .bg-primary {
+    @apply bg-primary;
+  } */
 }
 
 @layer components {

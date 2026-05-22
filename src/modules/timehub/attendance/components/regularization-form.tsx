@@ -66,24 +66,32 @@ export default function RegularizationForm() {
                 onOpenChange={(open) => setPopoverOpen({ desiredDate: open })}
               >
                 <PopoverTrigger asChild>
+                  {/* <Button
+          type="button"
+          variant="outline"
+          className="w-full justify-between font-normal rounded-sm h-10 border-none"
+        >
+         {field.value || "Select Desired Date"}
+          <ChevronDown className="w-4 h-4" />
+        </Button> */}
                   <Button
                     type="button"
                     variant="outline"
                     className={`
-                    h-10 min-h-10 w-full justify-between
-                    rounded-sm text-sm font-normal
-                    shadow-none
+    w-full justify-between
+    font-normal rounded-sm h-10
+    shadow-none
 
-                    ${
-                      errors.desiredDate
-                        ? "border border-red-500"
-                        : "border border-input"
-                    }
-                  `}
+    ${
+      errors.desiredDate
+        ? "border! border-red-500!"
+        : "border border-input hover:border-border"
+    }
+  `}
                   >
                     {field.value || "Select Desired Date"}
 
-                    <ChevronDown className="h-4 w-4 shrink-0" />
+                    <ChevronDown className="w-4 h-4" />
                   </Button>
                 </PopoverTrigger>
 
@@ -281,7 +289,7 @@ export default function RegularizationForm() {
 
           <div className="col-span-6">
             <div
-              className="bg-muted border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
+              className="bg-muted/40 border border-dashed rounded-md py-8 flex flex-col items-center justify-center text-sm text-muted-foreground hover:bg-primary/5 transition cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
               <CloudUpload className="text-primary" size={30} />
@@ -321,8 +329,7 @@ export default function RegularizationForm() {
             </Button>
 
             <Button
-              type="button"
-              variant="secondary"
+              variant="outline"
               onClick={() => router.back()}
               className="h-10 rounded-sm px-5"
             >

@@ -30,7 +30,7 @@ export default function ActivitiesCard({
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 rounded-lg border border-[#E3ECF5] bg-white px-2 py-2"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card px-2 py-2"
                 >
                   <Skeleton className="h-10 w-10 rounded-full" />
 
@@ -51,35 +51,35 @@ export default function ActivitiesCard({
                 return (
                   <div
                     key={index}
-                    className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between rounded-md border border-[#E3ECF5] bg-white p-2"
+                    className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between rounded-md border border-border bg-card p-2"
                   >
                     <div className="flex items-center gap-4">
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-full ${
                           item.type === "leave"
-                            ? "bg-[#EEF4FF]"
+                            ? "status-info"
                             : item.type === "payslip"
-                              ? "bg-[#E8F8EE]"
-                              : "bg-[#FFF0F0]"
+                              ? "status-success"
+                              : "status-danger"
                         }`}
                       >
                         <Icon
                           className={`h-4 w-4 ${
                             item.type === "leave"
-                              ? "text-[#2F6BFF]"
+                              ? "text-info"
                               : item.type === "payslip"
-                                ? "text-[#17B26A]"
-                                : "text-[#F04438]"
+                                ? "text-success"
+                                : "text-danger"
                           }`}
                         />
                       </div>
 
                       <div>
-                        <h3 className="text-[15px] font-semibold text-[#001E4B]">
+                        <h3 className="text-[15px] font-semibold text-foreground">
                           {item.title}
                         </h3>
 
-                        <p className="mt-1 text-xs text-[#7D8CA1]">
+                        <p className="mt-1 text-xs text-muted-foreground">
                           {item.description}
                         </p>
                       </div>
@@ -88,25 +88,31 @@ export default function ActivitiesCard({
                     <div className="flex items-center gap-3 ">
                       {item.type === "leave" && (
                         <>
-                          <button className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl bg-[#EAF8EF] transition hover:scale-105">
-                            <Check className="h-3 w-3 md:h-4 md:w-4 text-[#17B26A]" />
+                          <button className="status-success flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl transition hover:scale-105">
+                            <Check
+                              className="h-3 w-3 md:h-4 md:w-4"
+                              strokeWidth={3}
+                            />
                           </button>
 
-                          <button className="cursor-pointer flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFF1F1] transition hover:scale-105">
-                            <X className="h-3 w-3 md:h-4 md:w-4 text-[#F04438]" />
+                          <button className="status-danger flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl transition hover:scale-105">
+                            <X
+                              className="h-3 w-3 md:h-4 md:w-4"
+                              strokeWidth={3}
+                            />
                           </button>
                         </>
                       )}
 
                       {item.type === "payslip" && (
-                        <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-[#D6E4F2] bg-white px-4 py-1.5 text-xs md:text-[14px] font-medium text-[#1683E2] transition hover:bg-[#F3F8FF]">
+                        <button className="cursor-pointer flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-1.5 text-xs md:text-[14px] font-medium text-info transition hover:bg-info hover:text-info-foreground">
                           <Download className="h-3 w-3 md:h-4 md:w-4" />
                           Download
                         </button>
                       )}
 
                       {item.type === "timesheet" && (
-                        <button className="cursor-pointer rounded-lg bg-[#1683E2] px-5 py-1.5 text-xs md:text-[14px] font-medium text-white transition hover:opacity-90">
+                        <button className="cursor-pointer rounded-lg status-primary px-5 py-1.5 text-xs md:text-[14px] font-medium transition hover:opacity-90">
                           Submit
                         </button>
                       )}

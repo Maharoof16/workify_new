@@ -2,7 +2,7 @@
 
 import { addDays, format, isSameDay, parseISO, startOfWeek } from "date-fns";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -85,29 +85,23 @@ export function HolidaysCard() {
     length: 7,
   }).map((_, i) => addDays(weekStart, i));
 
-  // Always show max 2 holidays
   const visibleHolidays = useMemo(() => {
     const weekEnd = addDays(weekStart, 6);
 
-    // Holidays in current week
     const weekHolidays = holidaysWithColors.filter(
       (h) => h.dateObj >= weekStart && h.dateObj <= weekEnd,
     );
 
-    // If 2 holidays exist in week
     if (weekHolidays.length >= 2) {
       return weekHolidays.slice(0, 2);
     }
 
-    // Upcoming holidays after current week
     const futureHolidays = holidaysWithColors.filter(
       (h) => h.dateObj > weekEnd,
     );
 
-    // Merge current week + future
     const merged = [...weekHolidays, ...futureHolidays];
 
-    // Keep consistent layout
     return merged.slice(0, 2);
   }, [holidaysWithColors, weekStart]);
 
@@ -123,19 +117,18 @@ export function HolidaysCard() {
       "
     >
       <CardContent className="flex h-full flex-col">
-        {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-semibold">Upcoming Holidays</h2>
-
           <Button
-            variant={"link"}
+            variant="link"
             onClick={() => router.push("/timehub/holidays")}
+            className="group flex items-center gap-1 p-0"
           >
-            View All →
+            View All
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 " />
           </Button>
         </div>
 
-        {/* Calendar */}
         <div
           className="
             mb-4 rounded-xl
@@ -143,7 +136,6 @@ export function HolidaysCard() {
             bg-card p-4
           "
         >
-          {/* Month Nav */}
           <div className="mb-3 flex items-center justify-between">
             <Button
               size="icon"
@@ -165,25 +157,28 @@ export function HolidaysCard() {
             <Button
               size="icon"
               variant="outline"
-              className="h-8 w-8 rounded-full"
+              className="
+            h-8 w-8 rounded-full
+            border-border
+            bg-card
+            hover:bg-muted
+          "
               onClick={() => {
                 const newDate = addDays(selectedDate, 7);
 
                 setSelectedDate(newDate);
               }}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 text-foreground" />
             </Button>
           </div>
 
-          {/* Weekdays */}
           <div className="grid grid-cols-7 text-center text-[11px] text-muted-foreground">
             {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
               <div key={`${d}-${i}`}>{d}</div>
             ))}
           </div>
 
-          {/* Dates */}
           <div className="mt-2 grid grid-cols-7 text-center text-sm">
             {weekDays.map((date) => {
               const isToday = isSameDay(date, today);
@@ -200,11 +195,11 @@ export function HolidaysCard() {
                     rounded-full text-sm
                     transition-colors
 
-                    ${
-                      isToday
-                        ? "bg-primary text-primary-foreground"
-                        : "text-foreground"
-                    }
+                     ${
+                       isToday
+                         ? "bg-primary text-primary-foreground"
+                         : "text-foreground hover:bg-muted"
+                     }
 
                     ${holiday && !isToday ? "font-semibold text-primary" : ""}
                   `}
@@ -216,7 +211,6 @@ export function HolidaysCard() {
           </div>
         </div>
 
-        {/* Holiday List */}
         <div className="flex-1 space-y-3 overflow-auto pr-1">
           {loading
             ? Array.from({ length: 2 }).map((_, i) => (
