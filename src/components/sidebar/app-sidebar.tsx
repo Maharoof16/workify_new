@@ -18,6 +18,9 @@ import {
   Plane,
   ChevronDown,
   ChevronRight,
+  Building,
+  Cpu,
+  MapPin,
 } from "lucide-react";
 import {
   Tooltip,
@@ -77,7 +80,23 @@ const sidebarItems = [
   {
     title: "My Org",
     icon: Building2,
-    href: "/my-org",
+     children: [
+      {
+        title: "Department's",
+        icon: Building,
+        href: "/org/department",
+      },
+      {
+        title: "Location's",
+        icon: MapPin,
+        href: "/org/location",
+      },
+      {
+        title: "Metadata",
+        icon: Cpu,
+        href: "/org//meta-fields",
+      },
+    ],
   },
 
   {

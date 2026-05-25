@@ -366,6 +366,9 @@
   .border-level-1 {
     @apply border border-foreground;
   }
+  .text-xxs {
+    font-size: 10px;
+  }
 }
 
 .label-required::after {

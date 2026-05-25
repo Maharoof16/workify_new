@@ -100,7 +100,7 @@ export default function LeavesPage() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-3 p-2 ">
+    <div className="flex flex-col gap-3 p-2">
       <h1 className="text-2xl font-bold">Leaves</h1>
 
       <div className="grid grid-cols-12 gap-3 items-stretch">
