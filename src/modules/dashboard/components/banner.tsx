@@ -14,16 +14,19 @@ import { DashboardService } from "@/modules/dashboard/dashboard.service";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { formatDuration } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function GreetingBanner() {
   const [location, setLocation] = useState("");
   const [temp, setTemp] = useState<number | null>(null);
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const user = useSelector((state: RootState) => state.auth?.userData);
 
   useEffect(() => {
     if (!navigator.geolocation) {
       toast.error("Geolocation not supported");
+      setLoading(false);
       return;
     }
 
@@ -41,11 +44,14 @@ export default function GreetingBanner() {
           setTemp(data.temperature);
         } catch {
           toast.error("Failed to fetch weather data");
+        } finally {
+          setLoading(false);
         }
       },
       () => {
         toast.error("Location blocked. Please allow access.");
         setLocation("Location blocked");
+        setLoading(false);
       },
     );
   }, []);
@@ -82,6 +88,10 @@ export default function GreetingBanner() {
       icon: Users,
     },
   ];
+
+  const isUserLoading = !user?.first_name;
+  const isLoading = loading || isUserLoading;
+
   const actionBtn =
     "flex items-center gap-2 rounded-full " +
     "bg-[var(--banner-button-bg)] " +
@@ -95,28 +105,51 @@ export default function GreetingBanner() {
       <div className="relative z-10 grid grid-cols-12 gap-4 items-center">
         <div className="col-span-12 lg:col-span-5 space-y-8">
           <div>
-            <p className="text-[18px] font-medium text-[var(--banner-text)]">
-              {greeting}!
-            </p>
+            {isLoading ? (
+              <>
+                <Skeleton className="h-5 w-36 mb-3" />
+                <Skeleton className="h-8 w-52" />
+              </>
+            ) : (
+              <>
+                <p className="text-[18px] font-medium text-[var(--banner-text)]">
+                  {greeting}!
+                </p>
 
-            <h1 className="text-xl md:text-3xl font-semibold text-primary">
-              {user?.first_name} {user?.last_name}
-            </h1>
+                <h1 className="text-xl md:text-3xl font-semibold text-primary">
+                  {user?.first_name} {user?.last_name}
+                </h1>
+              </>
+            )}
           </div>
 
           <div className="bg-background/20 border-2 border-[var(--banner-card-border)] backdrop-blur-lg rounded-lg p-3 w-full">
-            <p className="mb-3 font-medium text-sm md:text-[16px]">
-              Ready to make today impactful?
-            </p>
+            {loading ? (
+              <>
+                <Skeleton className="h-5 w-52 mb-4" />
 
-            <div className="flex flex-wrap gap-2 md:gap-3">
-              {actions.map(({ label, icon: Icon, route }) => (
-                <Button key={label} className={actionBtn}>
-                  <Icon size={14} />
-                  {label}
-                </Button>
-              ))}
-            </div>
+                <div className="flex flex-wrap gap-2">
+                  <Skeleton className="h-9 w-28 rounded-full" />
+                  <Skeleton className="h-9 w-28 rounded-full" />
+                  <Skeleton className="h-9 w-28 rounded-full" />
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="mb-3 font-medium text-sm md:text-[16px]">
+                  Ready to make today impactful?
+                </p>
+
+                <div className="flex flex-wrap gap-2 md:gap-3">
+                  {actions.map(({ label, icon: Icon, route }) => (
+                    <Button key={label} className={actionBtn}>
+                      <Icon size={14} />
+                      {label}
+                    </Button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -133,10 +166,14 @@ export default function GreetingBanner() {
 
         <div className="col-span-12 lg:col-span-3 flex justify-start lg:justify-end">
           <div className="flex flex-col gap-4 justify-center items-center">
-            <div className="flex items-center gap-2 text-xs font-semibold">
-              <Calendar size={14} />
-              {formattedDate}
-            </div>
+            {loading ? (
+              <Skeleton className="h-4 w-32" />
+            ) : (
+              <div className="flex items-center gap-2 text-xs font-semibold">
+                <Calendar size={14} />
+                {formattedDate}
+              </div>
+            )}
 
             <div className="flex md:flex-col gap-2">
               <div
@@ -147,23 +184,34 @@ export default function GreetingBanner() {
     backdrop-blur-lg
   "
               >
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={weatherIcon}
-                    alt="weather"
-                    className="w-7 h-7 object-contain"
-                  />
+                {loading ? (
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="w-7 h-7 rounded-full" />
 
-                  <div>
-                    <span className="font-medium text-[var(--banner-text)]">
-                      {temp !== null ? `${temp}°C` : "--"}
-                    </span>
-
-                    <p className="text-xs text-[var(--banner-muted)]">
-                      {location}
-                    </p>
+                     <div className="space-y-2">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={weatherIcon}
+                      alt="weather"
+                      className="w-7 h-7 object-contain"
+                    />
+
+                    <div>
+                      <span className="font-medium text-[var(--banner-text)]">
+                        {temp !== null ? `${temp}°C` : "--"}
+                      </span>
+
+                      <p className="text-xs text-[var(--banner-muted)]">
+                        {location}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div
@@ -174,23 +222,34 @@ export default function GreetingBanner() {
     backdrop-blur-lg
   "
               >
-                <div className="flex items-center gap-4">
-                  <Image
-                    src={timehubIcon}
-                    alt="time"
-                    className="w-7 h-7 object-contain"
-                  />
+                {loading ? (
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="w-7 h-7 rounded-full" />
 
-                  <div>
-                    <span className="font-medium text-[var(--banner-text)]">
-                      {formatDuration(user?.worked_duration)}
-                    </span>
-
-                    <p className="text-xs text-[var(--banner-muted)]">
-                      Worked Today
-                    </p>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={timehubIcon}
+                      alt="time"
+                      className="w-7 h-7 object-contain"
+                    />
+
+                    <div>
+                      <span className="font-medium text-[var(--banner-text)]">
+                        {formatDuration(user?.worked_duration)}
+                      </span>
+
+                      <p className="text-xs text-[var(--banner-muted)]">
+                        Worked Today
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

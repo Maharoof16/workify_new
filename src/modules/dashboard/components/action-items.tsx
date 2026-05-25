@@ -94,7 +94,7 @@ export function ActionItemsCard() {
               >
                 <CardContent
                   className="
-                    flex flex-col gap-3
+                    flex flex-col gap-4
                     items-center justify-center
                     text-center p-2
                   "

@@ -658,9 +658,9 @@ export default function TimeHub() {
         {!isCheckedIn ? (
           <Button
             onClick={handleCheckIn}
-            variant={"default"}
+            variant="default"
             disabled={loadingAction !== null}
-            className="flex-1 flex gap-4 "
+            className="flex-1 flex gap-4 rounded-sm py-5"
           >
             <Clock className="h-4 w-4 " />
             {loadingAction === "checkin" ? "Checking In..." : "Check-In"}
@@ -668,9 +668,9 @@ export default function TimeHub() {
         ) : (
           <Button
             onClick={handleCheckOut}
-            variant={"destructive"}
+            variant="destructive"
             disabled={loadingAction !== null || isOnBreak}
-            className="flex-1 flex gap-4  "
+            className="flex-1 flex gap-4 rounded-sm py-5"
           >
             <LogOut className="h-4 w-4 " />
             {loadingAction === "checkout" ? "Checking Out..." : "Check-Out"}
@@ -679,10 +679,10 @@ export default function TimeHub() {
 
         {!isOnBreak ? (
           <Button
-            variant={"outline"}
+            variant="outline"
             onClick={handleBreakStart}
             disabled={!isCheckedIn || loadingAction !== null}
-            className="flex-1 flex gap-4 "
+            className="flex-1 flex gap-4 rounded-sm py-5"
           >
             <Hourglass className=" h-4 w-4 " />
             {loadingAction === "breakStart" ? "Starting..." : "Start Break"}
@@ -692,7 +692,7 @@ export default function TimeHub() {
             variant={"outline"}
             onClick={handleBreakEnd}
             disabled={loadingAction !== null}
-            className=" flex-1 flex gap-4"
+            className=" flex-1 flex gap-4 rounded-sm py-5"
           >
             <Hourglass className="h-4 w-4" />
             {loadingAction === "breakEnd" ? "Stopping..." : "Stop Break"}
