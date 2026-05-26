@@ -89,7 +89,7 @@ export default function GreetingBanner() {
     },
   ];
 
-  const isUserLoading = !user?.first_name;
+  const isUserLoading = !user?.firstName;
   const isLoading = loading || isUserLoading;
 
   const actionBtn =
@@ -117,7 +117,7 @@ export default function GreetingBanner() {
                 </p>
 
                 <h1 className="text-xl md:text-3xl font-semibold text-primary">
-                  {user?.first_name} {user?.last_name}
+                  {user?.firstName} {user?.lastName}
                 </h1>
               </>
             )}
@@ -241,7 +241,8 @@ export default function GreetingBanner() {
 
                     <div>
                       <span className="font-medium text-[var(--banner-text)]">
-                        {formatDuration(user?.worked_duration)}
+                        {/* {formatDuration(user?.worked_duration)} */}
+                        03h 44m
                       </span>
 
                       <p className="text-xs text-[var(--banner-muted)]">

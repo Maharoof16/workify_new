@@ -5,7 +5,7 @@ export interface Pagination {
   totalPages: number;
 }
 
-export type ResourceType =
+export type Resource =
   | "DEPARTMENT"
   | "LOCATION"
   | "CLIENT"

@@ -1,12 +1,47 @@
-import { Shift } from "@/modules/config/shifts/shift";
 
 export interface User {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  organization_id: string;
-  worked_duration: number;
-  shift: Shift;
-  active: boolean;
+  timezone: string;
+  preferredTimezone: string | null;
+  createdAt: string;
+  updatedAt: string;
+  isActive?: boolean;
+  memberId?: string;
+  roles: string[];
+  orgMemberId?: string;
+  employeeNo?: string;
+  phone?: string;
+  gender?: string;
+  address?: string;
+
+  dateOfBirth?: string;
+  joinedOn?: string | null;
+  leftOn?: string | null;
+
+  reportingMemberId?: string;
+
+  departmentId?: string;
+  locationId?: string;
+
+  metadata?: any;
+
+  isProfileSetupCompleted?: boolean;
+
+  department?: {
+    id: string;
+    name: string;
+  };
+
+  location?: {
+    id: string;
+    name: string;
+  };
+
+  reportingManager?: {
+    firstName: string;
+    lastName: string;
+  };
 }

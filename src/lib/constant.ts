@@ -108,3 +108,6 @@ export const icon_list = [
   "CircleOff",
   "ClockFading",
 ];
+
+
+export const ADMIN_PERMISSIONS = ["organization.admin", "system.admin"];

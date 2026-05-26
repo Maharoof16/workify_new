@@ -1,9 +1,9 @@
-import { ResourceType } from "../global";
+import { Resource } from "../global";
 
 export type GlobalOption = {
   id: string;
   organizationId: string;
-  resource: ResourceType | "ALL";
+  resource: Resource | "ALL";
   label: string;
   icon?: string;
   color?: string;
