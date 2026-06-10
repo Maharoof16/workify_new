@@ -19,6 +19,11 @@ export class AuthService {
     return response.data;
   }
 
+    static async logout() {
+    const response = await axiosInstance.post("/auth/logout");
+    return response.data;
+  }
+
    static async me() {
     const response = await axiosInstance.get("/auth/me");
     return response.data.data;

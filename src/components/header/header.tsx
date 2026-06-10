@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 export default function Header() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
 
   useEffect(() => {
     setMounted(true);

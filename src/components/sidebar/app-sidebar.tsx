@@ -42,6 +42,9 @@ import {
 } from "@/components/ui/sidebar";
 
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import UserProfile from "./user-profile";
 
 const sidebarItems = [
   {
@@ -122,6 +125,10 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = React.useState(false);
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
+   const user = useSelector((state: RootState) => state.auth.userData);
+  // const isMobile = useIsMobile();
+
+  if (!user) return null;
 
   React.useEffect(() => {
     const el = document.querySelector("[data-collapsible]");
@@ -461,6 +468,15 @@ export default function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          <div
+  className="
+  mt-auto
+  my-3
+  mx-2
+  "
+>
+  <UserProfile user={user} />
+</div>
         </SidebarContent>
       </Sidebar>
     </TooltipProvider>
