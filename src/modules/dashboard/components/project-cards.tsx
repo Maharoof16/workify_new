@@ -8,10 +8,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { GlobalOption } from "@/modules/config/config";
-import { Project } from "@/modules/my-org/projects/project";
+import { ProjectCard } from "@/modules/my-org/projects/project";
 
 type Props = {
-  projects: Project[];
+  projects: ProjectCard[];
   statuses: GlobalOption[];
   priorities: GlobalOption[];
   loading?: boolean;

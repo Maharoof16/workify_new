@@ -1,6 +1,6 @@
-import { Project } from "./project";
+import { ProjectCard } from "./project";
 
-export const Projects: Project[] = [
+export const Projects: ProjectCard[] = [
   {
     id: "1",
     title: "Workify",

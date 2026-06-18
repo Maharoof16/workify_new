@@ -17,7 +17,7 @@ import { ProjectService } from "@/modules/my-org/projects/project.service";
 import { StatusService } from "@/modules/config/status/status.service";
 import { PriorityService } from "@/modules/config/priorities/priorities.service";
 import { GlobalOption } from "@/modules/config/config";
-import { Project } from "@/modules/my-org/projects/project";
+import { Project, ProjectCard } from "@/modules/my-org/projects/project";
 import {
   EmployeeFeed,
   PerformanceCard,
@@ -27,7 +27,7 @@ import {
 import { DashboardService } from "@/modules/dashboard/dashboard.service";
 
 export default function Page() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectCard[]>([]);
   const [statuses, setStatuses] = useState<GlobalOption[]>([]);
   const [priorities, setPriorities] = useState<GlobalOption[]>([]);
   const [performanceData, setPerformanceData] = useState<PerformanceCard[]>([]);

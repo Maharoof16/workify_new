@@ -45,3 +45,8 @@ export interface User {
     lastName: string;
   };
 }
+
+export interface userReference {
+  id: string;
+  name: string;
+}
